@@ -40,7 +40,7 @@ module.exports = {
             let sql = "CALL get_product_by_id(?)";
             const [rows, fields] = await pool.execute(sql, [id]);
             console.log("Product FETCHED: " + rows[0].length + " for id: " + id);
-            return rows[0];
+            return rows[0][0];
             
         } catch (err) {
             console.log(err);
