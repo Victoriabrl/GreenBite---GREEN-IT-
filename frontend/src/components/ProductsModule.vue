@@ -2,6 +2,7 @@
     <div>
   
       <div v-if="action === 'show'">
+        <h1>{{ currentProduct.ProductName }}</h1>
         {{ currentProduct }}
   
       </div>
