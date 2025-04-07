@@ -1,13 +1,18 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <AppHeader />
     <router-view/>
   </div>
 </template>
 
 <script>
+import AppHeader from './components/Header.vue';  // Import the header component
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {   // Register the components so they can be used in the template
+    AppHeader
+  }
 }
 </script>
 
@@ -18,6 +23,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
