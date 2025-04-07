@@ -53,3 +53,5 @@ app.get('/', (request, response) => { // 'GET' or 'POST'...
 // app.use(routeBase, callback);
 
 app.use("/static", express.static(__dirname + '/static'));
+
+app.use("/api/vendors", require("./controllers/vendorsapi.route"));
