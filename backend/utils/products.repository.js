@@ -27,7 +27,7 @@ module.exports = {
             let sql = "CALL get_products_sorted_by_due_date()";
             const [rows, fields] = await pool.execute(sql);
             console.log("Products FETCHED: " + rows.length);
-            return rows;
+            return rows[0];
             
         } catch (err) {
             console.log(err);
