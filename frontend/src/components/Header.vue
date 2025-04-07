@@ -4,7 +4,7 @@
         <ul>
           <li>
             <a href="#/">
-              <h1> <!--<img src="../assets/logos/borrrow-logo.png" alt="BooknBorrow" width="100">--> GreenBite </h1>
+              <h1> <img src="../assets/logos/cucumber.webp" alt=" " width="100"> GreenBite </h1>
             </a>
           </li>
           <li class="zoom-hover">
