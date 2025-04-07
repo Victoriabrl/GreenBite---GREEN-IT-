@@ -55,3 +55,4 @@ app.get('/', (request, response) => { // 'GET' or 'POST'...
 app.use("/static", express.static(__dirname + '/static'));
 
 app.use("/api/vendors", require("./controllers/vendorsapi.route"));
+app.use("/api/products", require("./controllers/productsapi.route"));
