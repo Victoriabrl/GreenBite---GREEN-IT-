@@ -59,7 +59,8 @@ CREATE TABLE Products (
     EcoRating TINYINT CHECK (EcoRating BETWEEN 1 AND 5),
     ImageURL VARCHAR(255),
     CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    UpdatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    -- default due date is 3 days from now
+    DueDate DATETIME DEFAULT (CURRENT_TIMESTAMP + INTERVAL 3 DAY),
     FOREIGN KEY (VendorID) REFERENCES Vendors(VendorID) ON DELETE CASCADE,
     FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
 );
@@ -105,35 +106,6 @@ CREATE TABLE Reviews (
 
 
 
--- Indexes for Users table
-CREATE INDEX idx_users_email ON Users(Email);
-CREATE INDEX idx_users_name ON Users(FirstName, LastName);
-
--- Indexes for Vendors table
-CREATE INDEX idx_vendors_business_name ON Vendors(BusinessName);
-CREATE INDEX idx_vendors_userid ON Vendors(UserID);
-
--- Indexes for Products table
-CREATE INDEX idx_products_vendor ON Products(VendorID);
-CREATE INDEX idx_products_category ON Products(CategoryID);
-CREATE INDEX idx_products_name ON Products(ProductName);
-CREATE INDEX idx_products_price ON Products(Price);
-CREATE INDEX idx_products_eco ON Products(IsEcoFriendly, EcoRating);
-
--- Indexes for Orders table
-CREATE INDEX idx_orders_user ON Orders(UserID);
-CREATE INDEX idx_orders_date ON Orders(OrderDate);
-CREATE INDEX idx_orders_status ON Orders(Status);
-
--- Indexes for OrderItems table
-CREATE INDEX idx_orderitems_order ON OrderItems(OrderID);
-CREATE INDEX idx_orderitems_product ON OrderItems(ProductID);
-
--- Indexes for Reviews table
-CREATE INDEX idx_reviews_product ON Reviews(ProductID);
-CREATE INDEX idx_reviews_user ON Reviews(UserID);
-CREATE INDEX idx_reviews_rating ON Reviews(Rating);
-
 
 
 
@@ -146,6 +118,7 @@ CREATE INDEX idx_reviews_rating ON Reviews(Rating);
 
 
 -- Trigger to update product ratings after a review is added
+DROP TRIGGER IF EXISTS after_review_insert;
 DELIMITER //
 CREATE TRIGGER after_review_insert
 AFTER INSERT ON Reviews
@@ -162,6 +135,7 @@ END //
 DELIMITER ;
 
 -- Trigger to update product ratings after a review is updated
+DROP TRIGGER IF EXISTS after_review_update;
 DELIMITER //
 CREATE TRIGGER after_review_update
 AFTER UPDATE ON Reviews
@@ -178,6 +152,7 @@ END //
 DELIMITER ;
 
 -- Trigger to update product ratings after a review is deleted
+DROP TRIGGER IF EXISTS after_review_delete;
 DELIMITER //
 CREATE TRIGGER after_review_delete
 AFTER DELETE ON Reviews
@@ -194,6 +169,7 @@ END //
 DELIMITER ;
 
 -- Trigger to update stock quantity after order
+DROP TRIGGER IF EXISTS after_order_item_insert;
 DELIMITER //
 CREATE TRIGGER after_order_item_insert
 AFTER INSERT ON OrderItems
@@ -206,6 +182,7 @@ END //
 DELIMITER ;
 
 -- Trigger to restore stock quantity if an order is cancelled
+DROP TRIGGER IF EXISTS after_order_status_update;
 DELIMITER //
 CREATE TRIGGER after_order_status_update
 AFTER UPDATE ON Orders
@@ -217,6 +194,33 @@ BEGIN
         SET p.StockQuantity = p.StockQuantity + oi.Quantity
         WHERE oi.OrderID = NEW.OrderID;
     END IF;
+END //
+DELIMITER ;
+
+
+-- Trigger to automatically delete products when due date is passed
+DROP TRIGGER IF EXISTS delete_expired_products_trigger;
+DELIMITER //
+CREATE TRIGGER check_product_due_date
+BEFORE UPDATE ON Products
+FOR EACH ROW
+BEGIN
+    IF NEW.DueDate < NOW() THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'Cannot update: Product due date has expired';
+    END IF;
+END //
+DELIMITER ;
+
+-- Event to regularly clean up expired products
+DROP EVENT IF EXISTS delete_expired_products;
+DELIMITER //
+CREATE EVENT delete_expired_products
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+BEGIN
+    DELETE FROM Products WHERE DueDate < NOW();
 END //
 DELIMITER ;
 
@@ -326,10 +330,6 @@ INSERT INTO Reviews (ProductID, UserID, Rating, Comment) VALUES
     (9, 9, 4, 'Cleans well and smells great.'),
     (10, 10, 5, 'High-quality utensils.')
 ;
-
-
-
-
 
 
 
