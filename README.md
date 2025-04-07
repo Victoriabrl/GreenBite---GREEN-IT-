@@ -8,8 +8,8 @@ Objective: design, implement and analyze the carbon footprint of a website. The 
 
 - Install [node.js](https://nodejs.org/fr/download) (if not done before)
 - In the ```backend\!config``` folder
-  - Run the 2 sql scripts ```GreenBite.sql``` to create the tables of the database
-  - Copy the .env file in the folder to the root of the ```backend``` folder & update the ```DB_PASS=yourMySQLpassword``` field to your actual MySQL root user password
+  - Run the 2 sql scripts ```GreenBite.sql``` to create the tables of the database & ```GreenBite_functions.sql``` to create the functions, procedures...
+  - Copy the .env file to the root of the ```backend``` folder & update the ```DB_PASS=yourMySQLpassword``` field to your actual MySQL root user password
 - Run ```npm install```
 
 
