@@ -29,6 +29,19 @@ module.exports = {
             console.log(err);
             throw err;
         }
+    },
+
+    async getVendorById(id) {
+        try {
+            let sql = "SELECT * FROM vendors WHERE VendorID = ?";
+            const [rows, fields] = await pool.execute(sql, [id]);
+            console.log("Vendors FETCHED: " + rows.length + " for id: " + id);
+            return rows[0];
+            
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
     }
 
 };
