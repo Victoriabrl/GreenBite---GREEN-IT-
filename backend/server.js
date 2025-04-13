@@ -35,9 +35,9 @@ app.use(cors({ origin: "http://localhost:8080", credentials: true, methods: [ 'G
 
 
 // configure passport
-//const auth = require("./utils/user.auth");
-//auth.initializeAuthentications(app);
-//app.use("/auth", require("./controllers/auth.route"));
+const auth = require("./utils/user.auth");
+auth.initializeAuthentications(app);
+app.use("/auth", require("./controllers/auth.route"));
 
 
 // *** ROUTES/CONTROLLERS ***
@@ -56,3 +56,5 @@ app.use("/static", express.static(__dirname + '/static'));
 
 app.use("/api/vendors", require("./controllers/vendorsapi.route"));
 app.use("/api/products", require("./controllers/productsapi.route"));
+app.use("/api/users", require("./controllers/user.route"));
+app.use("/api/auth", require("./controllers/auth.route"));

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import ProductsModule from '@/components/ProductsModule'
+import ProfileModule from '@/components/ProfileModule.vue'
 
 Vue.use(Router)
 
@@ -22,6 +23,14 @@ export default new Router({
       path: '/products/:action/:id',
       name: 'products',
       component: ProductsModule,
+      props: true
+    },
+
+    // Auth Module Routes
+    {
+      path: '/profile/:action',
+      name: 'profile',
+      component: ProfileModule,
       props: true
     },
   ]

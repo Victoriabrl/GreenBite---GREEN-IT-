@@ -10,25 +10,23 @@ DROP TABLE IF EXISTS Reviews;
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS Products;
 DROP TABLE IF EXISTS Vendors;
+DROP TABLE IF EXISTS Categories;
+DROP TABLE IF EXISTS Users;
 
 -- Table for Users
-CREATE TABLE Users (
-    UserID INT AUTO_INCREMENT PRIMARY KEY,
-    Username VARCHAR(50) NOT NULL UNIQUE,
-    Email VARCHAR(100) NOT NULL UNIQUE,
-    Password VARCHAR(255) NOT NULL,
-    FirstName VARCHAR(50),
-    LastName VARCHAR(50),
-    Address VARCHAR(255),
-    PhoneNumber VARCHAR(20),
-    RegistrationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    IsActive BOOLEAN DEFAULT TRUE
+CREATE TABLE IF NOT EXISTS users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_name VARCHAR(100) NOT NULL,
+    user_email VARCHAR(100) NOT NULL UNIQUE,
+    user_password VARCHAR(100),
+    user_created DATETIME,
+    user_role ENUM('ADMIN', 'USER') NOT NULL
 );
 
 -- Table for Vendors
 CREATE TABLE Vendors (
     VendorID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT NOT NULL,
+    user_id INT NOT NULL,
     BusinessName VARCHAR(100) NOT NULL,
     BusinessDescription TEXT,
     BusinessAddress VARCHAR(255) NOT NULL,
@@ -36,7 +34,7 @@ CREATE TABLE Vendors (
     Logo VARCHAR(255),
     IsVerified BOOLEAN DEFAULT FALSE,
     RegistrationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 -- Table for Categories
@@ -68,13 +66,13 @@ CREATE TABLE Products (
 -- Table for Orders
 CREATE TABLE Orders (
     OrderID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT NOT NULL,
+    user_id INT NOT NULL,
     OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     TotalAmount DECIMAL(10, 2) NOT NULL,
     Status ENUM('Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled') DEFAULT 'Pending',
     ShippingAddress VARCHAR(255) NOT NULL,
     PaymentMethod VARCHAR(50) NOT NULL,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 -- Table for Order Items (joining Orders and Products)
@@ -92,13 +90,13 @@ CREATE TABLE OrderItems (
 CREATE TABLE Reviews (
     ReviewID INT AUTO_INCREMENT PRIMARY KEY,
     ProductID INT NOT NULL,
-    UserID INT NOT NULL,
+    user_id INT NOT NULL,
     Rating TINYINT NOT NULL CHECK (Rating BETWEEN 1 AND 5),
     Comment TEXT,
     ReviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    UNIQUE KEY (ProductID, UserID)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    UNIQUE KEY (ProductID, user_id)
 );
 
 
@@ -234,21 +232,26 @@ DELIMITER ;
 
 
 -- Insert data into Users table
-INSERT INTO Users (Username, Email, Password, FirstName, LastName, Address, PhoneNumber) VALUES
-    ('john_doe', 'john@example.com', 'password123', 'John', 'Doe', '123 Elm St', '123-456-7890'),
-    ('jane_smith', 'jane@example.com', 'password456', 'Jane', 'Smith', '456 Oak St', '987-654-3210'),
-    ('alice_wonder', 'alice@example.com', 'password789', 'Alice', 'Wonder', '789 Pine St', '555-555-5555'),
-    ('bob_builder', 'bob@example.com', 'password321', 'Bob', 'Builder', '321 Maple St', '111-222-3333'),
-    ('charlie_brown', 'charlie@example.com', 'password654', 'Charlie', 'Brown', '654 Cedar St', '444-666-7777'),
-    ('diana_prince', 'diana@example.com', 'password987', 'Diana', 'Prince', '987 Birch St', '888-999-0000'),
-    ('eve_adams', 'eve@example.com', 'password111', 'Eve', 'Adams', '111 Spruce St', '222-333-4444'),
-    ('frank_castle', 'frank@example.com', 'password222', 'Frank', 'Castle', '222 Willow St', '333-444-5555'),
-    ('grace_hopper', 'grace@example.com', 'password333', 'Grace', 'Hopper', '333 Redwood St', '666-777-8888'),
-    ('harry_potter', 'harry@example.com', 'password444', 'Harry', 'Potter', '444 Ash St', '999-000-1111')
+INSERT INTO users (user_name, user_email, user_password, user_created, user_role) VALUES
+    ('John Doe', 'john.doe@example.com', SHA2(CONCAT(now(), 'password123'), 224), now(), 'USER'),
+    ('Jane Smith', 'jane.smith@example.com', SHA2(CONCAT(now(), 'secretpass'), 224), now(), 'USER'),
+    ('Emily Clark', 'emily.clark@example.com', SHA2(CONCAT(now(), 'mypassword'), 224), now(), 'USER'),
+    ('Sarah Lee', 'sarah.lee@example.com', SHA2(CONCAT(now(), 'letmein'), 224), now(), 'USER'),
+    ('Michael Brown', 'michael.brown@example.com', SHA2(CONCAT(now(), 'adminpass'), 224), now(), 'ADMIN'),
+    ('Robert Wilson', 'robert.wilson@example.com', SHA2(CONCAT(now(), 'pass123'), 224), now(), 'USER'),
+    ('Lisa Anderson', 'lisa.anderson@example.com', SHA2(CONCAT(now(), 'secure456'), 224), now(), 'USER'),
+    ('David Chen', 'david.chen@example.com', SHA2(CONCAT(now(), 'chen789'), 224), now(), 'USER'),
+    ('Maria Garcia', 'maria.garcia@example.com', SHA2(CONCAT(now(), 'maria123'), 224), now(), 'USER'),
+    ('James Johnson', 'james.johnson@example.com', SHA2(CONCAT(now(), 'jj2024'), 224), now(), 'USER'),
+    ('Emma Davis', 'emma.davis@example.com', SHA2(CONCAT(now(), 'emma456'), 224), now(), 'USER'),
+    ('Thomas White', 'thomas.white@example.com', SHA2(CONCAT(now(), 'white789'), 224), now(), 'USER'),
+    ('Sophie Martin', 'sophie.martin@example.com', SHA2(CONCAT(now(), 'sophie123'), 224), now(), 'USER'),
+    ('Kevin Taylor', 'kevin.taylor@example.com', SHA2(CONCAT(now(), 'taylor456'), 224), now(), 'USER'),
+    ('Anna Miller', 'anna.miller@example.com', SHA2(CONCAT(now(), 'miller789'), 224), now(), 'USER')
 ;
 
 -- Insert data into Vendors table
-INSERT INTO Vendors (UserID, BusinessName, BusinessDescription, BusinessAddress, Website, Logo) VALUES
+INSERT INTO Vendors (user_id, BusinessName, BusinessDescription, BusinessAddress, Website, Logo) VALUES
     (1, 'EcoMart', 'Eco-friendly products for daily use', '123 Elm St', 'www.ecomart.com', 'ecomart_logo.png'),
     (2, 'GreenGoods', 'Sustainable and organic goods', '456 Oak St', 'www.greengoods.com', 'greengoods_logo.png'),
     (3, 'NatureNest', 'Natural and eco-friendly products', '789 Pine St', 'www.naturenest.com', 'naturenest_logo.png'),
@@ -290,7 +293,7 @@ INSERT INTO Products (VendorID, CategoryID, ProductName, Description, Price, Sto
 ;
 
 -- Insert data into Orders table
-INSERT INTO Orders (UserID, TotalAmount, Status, ShippingAddress, PaymentMethod) VALUES
+INSERT INTO Orders (user_id, TotalAmount, Status, ShippingAddress, PaymentMethod) VALUES
     (1, 50.97, 'Pending', '123 Elm St', 'Credit Card'),
     (2, 30.99, 'Processing', '456 Oak St', 'PayPal'),
     (3, 99.99, 'Shipped', '789 Pine St', 'Debit Card'),
@@ -318,7 +321,7 @@ INSERT INTO OrderItems (OrderID, ProductID, Quantity, UnitPrice) VALUES
 ;
 
 -- Insert data into Reviews table
-INSERT INTO Reviews (ProductID, UserID, Rating, Comment) VALUES
+INSERT INTO Reviews (ProductID, user_id, Rating, Comment) VALUES
     (1, 1, 5, 'Great product! Very eco-friendly.'),
     (2, 2, 4, 'Good quality, but a bit expensive.'),
     (3, 3, 5, 'Love this organic rice!'),
