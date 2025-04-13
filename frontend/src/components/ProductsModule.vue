@@ -3,6 +3,12 @@
   
       <div v-if="action === 'show'">
         <h1>{{ currentProduct.ProductName }}</h1>
+        <p>{{ currentProduct.Description }}</p>
+        <p>
+          Sold by <a :href="'/#/vendors/show/'+ currentProduct.VendorID">{{ currentProduct.BusinessName }}</a>
+        </p>
+
+        
         {{ currentProduct }}
   
       </div>
@@ -20,7 +26,7 @@
       <div  v-if="action === 'list'">   <!-- v-if is a conditional rendering -->
         <h1>Products List</h1>
   
-        <ul class="games-list">
+        <ul class="products-list">
           <li v-for="product of productArray" v-bind:key="product.ProductID" class="zoom-hover">
             <a :href="'/#/products/show/' + product.ProductID">
               <table class="table table-bordered">
@@ -50,7 +56,7 @@
   
   <script>
   export default {
-    name: 'Games',
+    name: 'Products',
     props: ['action', 'id'],  // properties that can be passed to the component
     // action: show, edit, list
     // id: book_id
@@ -175,10 +181,6 @@
       font-weight: normal;
     }
   
-    a {
-      color: #000000;
-      text-decoration: none;
-    }
   
     a:hover {
       text-decoration: underline;
@@ -191,8 +193,8 @@
     }
   
   
-    /************ GAMES LIST ************/
-    .games-list {
+    /************ PRODUCTS LIST ************/
+    .products-list {
       margin: auto; /* Center the ul element */
       margin-top: 20px;
       display: flex;
@@ -205,19 +207,19 @@
       list-style-type: none; /* Remove dots */
     }
   
-    .games-list li {
+    .products-list li {
       margin: 0 20px 20px;
       text-align: center;
       position: relative;
       max-width: 200px;
     }
     
-    .games-list li img {
+    .products-list li img {
       max-width: 100px;
       max-height: 100px;
     }
   
-    .games-list tbody {
+    .products-list tbody {
       text-align: center;
       font-size: 0.8em;
     }
