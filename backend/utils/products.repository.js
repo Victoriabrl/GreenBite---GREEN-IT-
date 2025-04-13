@@ -27,6 +27,10 @@ module.exports = {
             let sql = "CALL get_products_sorted_by_due_date()";
             const [rows, fields] = await pool.execute(sql);
             console.log("Products FETCHED: " + rows[0].length);
+            // modify the date format to YYYY-MM-DD
+            rows[0].forEach((row) => {
+                row.DueDate = new Date(row.DueDate).toISOString().split('T')[0];
+            });
             return rows[0];
             
         } catch (err) {
@@ -40,12 +44,24 @@ module.exports = {
             let sql = "CALL get_product_by_id(?)";
             const [rows, fields] = await pool.execute(sql, [id]);
             console.log("Product FETCHED: " + rows[0][0].length + " for id: " + id);
+            // modify the date format to YYYY-MM-DD
+            //rows[0].DueDate = new Date(row.DueDate).toISOString().split('T')[0];
             return rows[0][0];
             
         } catch (err) {
             console.log(err);
             throw err;
         }
-    }
+    },
 
+    async getProductsByCategories(Categories) {
+        let sql = "CALL get_products_by_category(?)";
+        const [rows, fields] = await pool.execute(sql, [Categories]);
+        console.log("Products FETCHED: " + rows[0].length + " for categories: " + Categories);
+        // modify the date format to YYYY-MM-DD
+        rows[0].forEach((row) => {
+            row.DueDate = new Date(row.DueDate).toISOString().split('T')[0];
+        });
+        return rows[0];
+    }
 };

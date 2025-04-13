@@ -13,28 +13,57 @@
 
 
     <div  v-if="action === 'list'">
-      <h1>Products List</h1>
+      <div>
+        <h1>What are you looking for?</h1>
+        <!-- Checkboxes for the filters ('Vegetable', 'Fruit', 'Dairy', 'Meat', 'Grain', 'Snack')
+         Ticking a checkbox will add the filter to the filterArray and unticking it will remove it from the filterArray -->
+        <div class="filter-checkboxes">
+          <label v-for="category in ['Vegetable', 'Fruit', 'Dairy', 'Meat', 'Grain', 'Snack']" :key="category" class="filter-checkbox">
+            <input 
+              type="checkbox" 
+              :value="category" 
+              v-model="filterArray"
+            >
+            <!--@change="getAllData()"-->
+            {{ category }}
+          </label><br/>
+          <input type="button" @click="getAllDataWithFilters()" value="Apply"/>
+        </div>
 
-      <ul class="products-list">
-        <li v-for="product of productArray" v-bind:key="product.ProductID" class="zoom-hover">
-          <a :href="'/#/products/show/' + product.ProductID">
-            <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th colspan="3">
-                      {{ product.ProductName }}
-                  </th>
-                </tr>
-                <tr>
-                  <th colspan="3">
-                  </th>
-                </tr>
-              </thead>
-            </table>
-          </a>
-        </li>
-          {{ productArray }}
-      </ul>
+
+      </div>
+
+      <div><!-- v-if="filter === 1">-->
+        <h1>Products List</h1>
+        <ul class="products-list">
+          <li v-for="product of productArray" v-bind:key="product.ProductID" class="zoom-hover">
+            <a :href="'/#/products/show/' + product.ProductID">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="2">
+                        {{ product.ProductName }}
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>{{ product.Price }}€ / kg</td>
+                    <td>{{ product.StockQuantity }} kg left</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      Good before: {{ product.DueDate }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </a>
+          </li>
+            {{ productArray }}
+        </ul>
+      </div>
     </div>
 
   </div>
@@ -45,6 +74,7 @@
   export default {
     name: 'Products',
     props: ['action', 'id'],  // properties that can be passed to the component
+    filter: 0,
 
     data() {
       return {   // variables that can be used in the template
@@ -52,6 +82,7 @@
         pageSize: 30,
         numberOfPages: 0,
   
+        filterArray: [],
         productArray: [],
         currentProduct: {
 
@@ -64,6 +95,18 @@
       async getAllData(pageNumber, pageSize) {
         try {
           let responseProduct = await this.$http.get('http://localhost:9000/api/products/list');
+          this.productArray = await responseProduct.data;
+  
+        } catch (exception) {
+          console.log(exception);
+        }
+      },
+
+      async getAllDataWithFilters(pageNumber, pageSize) {
+        try {
+          // concatenate the filterArray into a string with commas
+          let filterString = this.filterArray.join(',');
+          let responseProduct = await this.$http.get('http://localhost:9000/api/products/categories/' + filterString);
           this.productArray = await responseProduct.data;
   
         } catch (exception) {
@@ -96,35 +139,40 @@
   
       action: function(newAction, oldAction) {
         if (newAction === 'list') {
-          this.getAllData();
+          this.getAllDataWithFilters();
         }
       },
   
       pageNumber: function(newPageNumber, oldPageNumber) {
-        this.getAllData();
+        this.getAllDataWithFilters();
       },
   
       pageSize: function(newPageSize, oldPageSize) {
-        this.getAllData();
+        this.getAllDataWithFilters();
       }
     },
   
     created() {   // executed when the component is created
-      this.getAllData();
-      this.refreshcurrentProduct();
+      //this.getAllData();
+      //this.refreshcurrentProduct();
     }
   };
 </script>
   
 <style scoped>
-    h1, h2 {
-      font-weight: normal;
-    }
-  
-  
-    .new-button {
-      padding: 10px;
-      margin-bottom: 20px;
-      margin-top: -30px;
-    }
+  h1, h2 {
+    font-weight: normal;
+  }
+
+  .new-button {
+    padding: 10px;
+    margin-bottom: 20px;
+    margin-top: -30px;
+  }
+
+  .filter-checkbox {
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 10px;
+  }
 </style>

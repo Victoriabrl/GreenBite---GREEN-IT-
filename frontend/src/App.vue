@@ -41,6 +41,10 @@ export default {
     margin: 20px auto;
   }
 
+  .products-list a {
+    text-decoration: none;
+  }
+  
   .products-list {
     margin: auto; /* Center the ul element */
     margin-top: 20px;
