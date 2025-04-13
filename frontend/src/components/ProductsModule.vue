@@ -1,60 +1,60 @@
 <template>
-    <div>
-  
-      <div v-if="action === 'show'">
-        <h1>{{ currentProduct.ProductName }}</h1>
-        <p>{{ currentProduct.Description }}</p>
-        <p>
-          Sold by <a :href="'/#/vendors/show/'+ currentProduct.VendorID">{{ currentProduct.BusinessName }}</a>
-        </p>
+  <div>
 
-        
-        {{ currentProduct }}
-  
-      </div>
-  
-  
-      <!--
-      <div v-if="action === 'edit'">
-      </div>
-      -->
-      <!-- v-model is a two-way data-binding, when the input changes, the variable changes too -->
-  
-  
-  
-      <!-- when on: /books/list/all -->
-      <div  v-if="action === 'list'">   <!-- v-if is a conditional rendering -->
-        <h1>Products List</h1>
-  
-        <ul class="products-list">
-          <li v-for="product of productArray" v-bind:key="product.ProductID" class="zoom-hover">
-            <a :href="'/#/products/show/' + product.ProductID">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th colspan="3">
-                        {{ product.ProductName }}
-                    </th>
-                  </tr>
-                  <tr>
-                    <th colspan="3">
-                    </th>
-                  </tr>
-                </thead>
-              </table>
-            </a>
-          </li>
-            {{ productArray }}
-        </ul>
-  
-  
-      </div>
-  
+    <div v-if="action === 'show'">
+      <h1>{{ currentProduct.ProductName }}</h1>
+      <p>{{ currentProduct.Description }}</p>
+      <p>
+        Sold by <a :href="'/#/vendors/show/'+ currentProduct.VendorID">{{ currentProduct.BusinessName }}</a>
+      </p>
+
+      
+      {{ currentProduct }}
+
     </div>
-  </template>
+
+
+    <!--
+    <div v-if="action === 'edit'">
+    </div>
+    -->
+    <!-- v-model is a two-way data-binding, when the input changes, the variable changes too -->
+
+
+
+    <!-- when on: /books/list/all -->
+    <div  v-if="action === 'list'">   <!-- v-if is a conditional rendering -->
+      <h1>Products List</h1>
+
+      <ul class="products-list">
+        <li v-for="product of productArray" v-bind:key="product.ProductID" class="zoom-hover">
+          <a :href="'/#/products/show/' + product.ProductID">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th colspan="3">
+                      {{ product.ProductName }}
+                  </th>
+                </tr>
+                <tr>
+                  <th colspan="3">
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </a>
+        </li>
+          {{ productArray }}
+      </ul>
+
+
+    </div>
+
+  </div>
+</template>
   
   
-  <script>
+<script>
   export default {
     name: 'Products',
     props: ['action', 'id'],  // properties that can be passed to the component
@@ -173,10 +173,9 @@
       this.refreshcurrentProduct();
     }
   };
-  </script>
+</script>
   
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
+<style scoped>
     h1, h2 {
       font-weight: normal;
     }
@@ -187,8 +186,4 @@
       margin-bottom: 20px;
       margin-top: -30px;
     }
-  
-  
-    
-  
-  </style>
+</style>
