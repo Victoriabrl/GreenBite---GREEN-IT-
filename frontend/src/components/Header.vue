@@ -7,8 +7,11 @@
               <h1> <img src="../assets/logos/cucumber.webp" alt=" " width="100"> GreenBite </h1>
             </a>
           </li>
-          <li class="zoom-hover">
+          <li>
             <a href="#/products/list/all/"> Marketplace</a>
+          </li>
+          <li>
+            <a href="#/vendors/list/all/"> Vendors</a>
           </li>
         </ul>
   
@@ -19,16 +22,16 @@
               <!--<img src="../assets/logos/profile-logo.png" alt="" width="50">-->
   
               <ul v-if="active === true" class="profile-list">
-                <li class="zoom-hover">
+                <li>
                   <a href="#/profile/myprofile"> My Profile</a>
                 </li>
-                <li class="zoom-hover">
+                <li>
                   <a href="#/profile/register"> Register</a>
                 </li>
-                <li class="zoom-hover">
+                <li>
                   <a href="#/profile/login"> Login</a>
                 </li>
-                <li class="zoom-hover">
+                <li>
                   <input type="button" @click="sendLogoutRequest('get', 'logout')" value="LOGOUT" />
                 </li>
               </ul>
