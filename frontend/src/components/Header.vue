@@ -4,7 +4,7 @@
         <ul>
           <li>
             <a href="#/">
-              <h1> <img src="../assets/logos/cucumber.webp" alt=" " width="100"> GreenBite </h1>
+              <h2> <img src="../assets/logos/logo.webp" alt=" " width="100"> <b>GreenBite</b> </h2>
             </a>
           </li>
           <li>
@@ -104,6 +104,7 @@
   
     .profile-list {
       position: absolute;
+      right: 0;
       background-color: black;
       padding: 20px;
       margin-top: 10px;
@@ -111,6 +112,7 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
+      z-index: 100;
     }
   
   </style>

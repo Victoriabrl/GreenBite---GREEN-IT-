@@ -182,10 +182,6 @@
     }
   
   
-    a:hover {
-      text-decoration: underline;
-    }
-  
     .new-button {
       padding: 10px;
       margin-bottom: 20px;
@@ -193,56 +189,6 @@
     }
   
   
-    /************ PRODUCTS LIST ************/
-    .products-list {
-      margin: auto; /* Center the ul element */
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      max-width: 1300px;
-      list-style-type: none; /* Remove dots */
-    }
-  
-    .products-list li {
-      margin: 0 20px 20px;
-      text-align: center;
-      position: relative;
-      max-width: 200px;
-    }
-    
-    .products-list li img {
-      max-width: 100px;
-      max-height: 100px;
-    }
-  
-    .products-list tbody {
-      text-align: center;
-      font-size: 0.8em;
-    }
-  
-    /************ Pagination ************/
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /* space between the buttons */
-      gap: 10px;
-    }
-  
-    .pagination input[type="number"] {
-      width: 70px;
-      text-align: center;
-    }
-  
-    table {
-      width: 80%;
-      /* center the table */
-      margin: 20px auto;
-    }
     
   
   </style>
