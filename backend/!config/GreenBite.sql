@@ -10,7 +10,6 @@ DROP TABLE IF EXISTS Reviews;
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS Products;
 DROP TABLE IF EXISTS Vendors;
-DROP TABLE IF EXISTS Categories;
 DROP TABLE IF EXISTS Users;
 
 -- Table for Users
@@ -36,66 +35,45 @@ CREATE TABLE Vendors (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
--- Table for Categories
-CREATE TABLE Categories (
-    CategoryID INT AUTO_INCREMENT PRIMARY KEY,
-    CategoryName VARCHAR(50) NOT NULL UNIQUE,
-    Description TEXT
-);
-
 -- Table for Products
 CREATE TABLE Products (
     ProductID INT AUTO_INCREMENT PRIMARY KEY,
     VendorID INT NOT NULL,
-    CategoryID INT NOT NULL,
+    Category ENUM('Vegetable', 'Fruit', 'Dairy', 'Meat', 'Grain', 'Snack') NOT NULL,
     ProductName VARCHAR(100) NOT NULL,
     Description TEXT,
     Price DECIMAL(10, 2) NOT NULL,
     StockQuantity INT NOT NULL DEFAULT 0,
-    IsEcoFriendly BOOLEAN DEFAULT TRUE,
-    EcoRating TINYINT CHECK (EcoRating BETWEEN 1 AND 5),
-    ImageURL VARCHAR(255),
+    IsAvailable BOOLEAN DEFAULT TRUE,
     CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     -- default due date is 3 days from now
     DueDate DATETIME DEFAULT (CURRENT_TIMESTAMP + INTERVAL 3 DAY),
-    FOREIGN KEY (VendorID) REFERENCES Vendors(VendorID) ON DELETE CASCADE,
-    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+    FOREIGN KEY (VendorID) REFERENCES Vendors(VendorID) ON DELETE CASCADE
 );
 
 -- Table for Orders
 CREATE TABLE Orders (
     OrderID INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    ProductID INT NOT NULL,
     OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     TotalAmount DECIMAL(10, 2) NOT NULL,
-    Status ENUM('Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled') DEFAULT 'Pending',
-    ShippingAddress VARCHAR(255) NOT NULL,
-    PaymentMethod VARCHAR(50) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
-);
-
--- Table for Order Items (joining Orders and Products)
-CREATE TABLE OrderItems (
-    OrderItemID INT AUTO_INCREMENT PRIMARY KEY,
-    OrderID INT NOT NULL,
-    ProductID INT NOT NULL,
-    Quantity INT NOT NULL,
-    UnitPrice DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID) ON DELETE CASCADE,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+    PaymentMethod ENUM('Credit Card', 'Debit Card', 'PayPal') NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE
 );
 
 -- Table for Reviews
 CREATE TABLE Reviews (
     ReviewID INT AUTO_INCREMENT PRIMARY KEY,
-    ProductID INT NOT NULL,
+    VendorID INT NOT NULL,
     user_id INT NOT NULL,
     Rating TINYINT NOT NULL CHECK (Rating BETWEEN 1 AND 5),
     Comment TEXT,
     ReviewDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE,
+    FOREIGN KEY (VendorID) REFERENCES Vendors(VendorID) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    UNIQUE KEY (ProductID, user_id)
+    UNIQUE KEY (VendorID, user_id)
 );
 
 
@@ -105,109 +83,6 @@ CREATE TABLE Reviews (
 
 
 
-
-
-
-
-
-
-
-
-
--- Trigger to update product ratings after a review is added
-DROP TRIGGER IF EXISTS after_review_insert;
-DELIMITER //
-CREATE TRIGGER after_review_insert
-AFTER INSERT ON Reviews
-FOR EACH ROW
-BEGIN
-    UPDATE Products 
-    SET EcoRating = (
-        SELECT AVG(Rating) 
-        FROM Reviews 
-        WHERE ProductID = NEW.ProductID
-    )
-    WHERE ProductID = NEW.ProductID;
-END //
-DELIMITER ;
-
--- Trigger to update product ratings after a review is updated
-DROP TRIGGER IF EXISTS after_review_update;
-DELIMITER //
-CREATE TRIGGER after_review_update
-AFTER UPDATE ON Reviews
-FOR EACH ROW
-BEGIN
-    UPDATE Products 
-    SET EcoRating = (
-        SELECT AVG(Rating) 
-        FROM Reviews 
-        WHERE ProductID = NEW.ProductID
-    )
-    WHERE ProductID = NEW.ProductID;
-END //
-DELIMITER ;
-
--- Trigger to update product ratings after a review is deleted
-DROP TRIGGER IF EXISTS after_review_delete;
-DELIMITER //
-CREATE TRIGGER after_review_delete
-AFTER DELETE ON Reviews
-FOR EACH ROW
-BEGIN
-    UPDATE Products 
-    SET EcoRating = (
-        SELECT COALESCE(AVG(Rating), 0) 
-        FROM Reviews 
-        WHERE ProductID = OLD.ProductID
-    )
-    WHERE ProductID = OLD.ProductID;
-END //
-DELIMITER ;
-
--- Trigger to update stock quantity after order
-DROP TRIGGER IF EXISTS after_order_item_insert;
-DELIMITER //
-CREATE TRIGGER after_order_item_insert
-AFTER INSERT ON OrderItems
-FOR EACH ROW
-BEGIN
-    UPDATE Products
-    SET StockQuantity = StockQuantity - NEW.Quantity
-    WHERE ProductID = NEW.ProductID;
-END //
-DELIMITER ;
-
--- Trigger to restore stock quantity if an order is cancelled
-DROP TRIGGER IF EXISTS after_order_status_update;
-DELIMITER //
-CREATE TRIGGER after_order_status_update
-AFTER UPDATE ON Orders
-FOR EACH ROW
-BEGIN
-    IF NEW.Status = 'Cancelled' AND OLD.Status != 'Cancelled' THEN
-        UPDATE Products p
-        JOIN OrderItems oi ON p.ProductID = oi.ProductID
-        SET p.StockQuantity = p.StockQuantity + oi.Quantity
-        WHERE oi.OrderID = NEW.OrderID;
-    END IF;
-END //
-DELIMITER ;
-
-
--- Trigger to automatically delete products when due date is passed
-DROP TRIGGER IF EXISTS delete_expired_products_trigger;
-DELIMITER //
-CREATE TRIGGER check_product_due_date
-BEFORE UPDATE ON Products
-FOR EACH ROW
-BEGIN
-    IF NEW.DueDate < NOW() THEN
-        SIGNAL SQLSTATE '45000' 
-        SET MESSAGE_TEXT = 'Cannot update: Product due date has expired';
-    END IF;
-END //
-DELIMITER ;
 
 -- Event to regularly clean up expired products
 DROP EVENT IF EXISTS delete_expired_products;
@@ -250,80 +125,58 @@ INSERT INTO users (user_name, user_email, user_password, user_created, user_role
 ;
 
 -- Insert data into Vendors table
-INSERT INTO Vendors (user_id, BusinessName, BusinessDescription, BusinessAddress, Website, Logo) VALUES
-    (1, 'EcoMart', 'Eco-friendly products for daily use', '123 Elm St', 'www.ecomart.com', 'ecomart_logo.png'),
-    (2, 'GreenGoods', 'Sustainable and organic goods', '456 Oak St', 'www.greengoods.com', 'greengoods_logo.png'),
-    (3, 'NatureNest', 'Natural and eco-friendly products', '789 Pine St', 'www.naturenest.com', 'naturenest_logo.png'),
-    (4, 'EcoEssentials', 'Essential eco-friendly items', '321 Maple St', 'www.ecoessentials.com', 'ecoessentials_logo.png'),
-    (5, 'PlanetCare', 'Caring for the planet with eco-products', '654 Cedar St', 'www.planetcare.com', 'planetcare_logo.png'),
-    (6, 'GreenLife', 'Eco-friendly lifestyle products', '987 Birch St', 'www.greenlife.com', 'greenlife_logo.png'),
-    (7, 'EcoHaven', 'Your haven for eco-friendly goods', '111 Spruce St', 'www.ecohaven.com', 'ecohaven_logo.png'),
-    (8, 'SustainStore', 'Sustainable products for everyone', '222 Willow St', 'www.sustainstore.com', 'sustainstore_logo.png'),
-    (9, 'EarthlyGoods', 'Goods that care for the Earth', '333 Redwood St', 'www.earthlygoods.com', 'earthlygoods_logo.png'),
-    (10, 'EcoChoice', 'Your choice for eco-friendly products', '444 Ash St', 'www.ecochoice.com', 'ecochoice_logo.png')
-;
-
--- Insert data into Categories table
-INSERT INTO Categories (CategoryName, Description) VALUES
-    ('Home Essentials', 'Eco-friendly home essentials'),
-    ('Personal Care', 'Sustainable personal care products'),
-    ('Groceries', 'Organic and eco-friendly groceries'),
-    ('Clothing', 'Sustainable and eco-friendly clothing'),
-    ('Electronics', 'Eco-friendly electronic products'),
-    ('Outdoor', 'Eco-friendly outdoor products'),
-    ('Toys', 'Sustainable toys for kids'),
-    ('Stationery', 'Eco-friendly stationery items'),
-    ('Cleaning Supplies', 'Eco-friendly cleaning products'),
-    ('Kitchenware', 'Sustainable kitchenware')
+INSERT INTO Vendors (user_id, BusinessName, BusinessDescription, BusinessAddress, Website) VALUES
+    (1, 'EcoMart', 'Eco-friendly products for daily use', '123 Elm St', 'www.ecomart.com'),
+    (2, 'GreenGoods', 'Sustainable and organic goods', '456 Oak St', 'www.greengoods.com'),
+    (3, 'NatureNest', 'Natural and eco-friendly products', '789 Pine St', 'www.naturenest.com'),
+    (4, 'EcoEssentials', 'Essential eco-friendly items', '321 Maple St', 'www.ecoessentials.com'),
+    (5, 'PlanetCare', 'Caring for the planet with eco-products', '654 Cedar St', 'www.planetcare.com'),
+    (6, 'GreenLife', 'Eco-friendly lifestyle products', '987 Birch St', 'www.greenlife.com'),
+    (7, 'EcoHaven', 'Your haven for eco-friendly goods', '111 Spruce St', 'www.ecohaven.com'),
+    (8, 'SustainStore', 'Sustainable products for everyone', '222 Willow St', 'www.sustainstore.com'),
+    (9, 'EarthlyGoods', 'Goods that care for the Earth', '333 Redwood St', 'www.earthlygoods.com'),
+    (10, 'EcoChoice', 'Your choice for eco-friendly products', '444 Ash St', 'www.ecochoice.com')
 ;
 
 -- Insert data into Products table
-INSERT INTO Products (VendorID, CategoryID, ProductName, Description, Price, StockQuantity, EcoRating, ImageURL) VALUES
-    (1, 1, 'Reusable Bamboo Towels', 'Eco-friendly reusable towels', 12.99, 100, 5, 'bamboo_towels.png'),
-    (2, 2, 'Organic Shampoo', 'Sustainable organic shampoo', 8.99, 200, 4, 'organic_shampoo.png'),
-    (3, 3, 'Organic Rice', 'Eco-friendly organic rice', 3.99, 300, 5, 'organic_rice.png'),
-    (4, 4, 'Recycled Cotton T-Shirt', 'Sustainable cotton t-shirt', 15.99, 150, 4, 'cotton_tshirt.png'),
-    (5, 5, 'Solar Charger', 'Eco-friendly solar charger', 25.99, 50, 5, 'solar_charger.png'),
-    (6, 6, 'Eco Tent', 'Sustainable camping tent', 99.99, 20, 4, 'eco_tent.png'),
-    (7, 7, 'Wooden Toy Set', 'Eco-friendly wooden toys', 19.99, 80, 5, 'wooden_toys.png'),
-    (8, 8, 'Recycled Paper Notebook', 'Sustainable paper notebook', 4.99, 500, 5, 'paper_notebook.png'),
-    (9, 9, 'Natural Dish Soap', 'Eco-friendly dish soap', 6.99, 250, 4, 'dish_soap.png'),
-    (10, 10, 'Bamboo Utensil Set', 'Sustainable kitchen utensils', 14.99, 120, 5, 'bamboo_utensils.png')
-;
-
--- Insert data into Orders table
-INSERT INTO Orders (user_id, TotalAmount, Status, ShippingAddress, PaymentMethod) VALUES
-    (1, 50.97, 'Pending', '123 Elm St', 'Credit Card'),
-    (2, 30.99, 'Processing', '456 Oak St', 'PayPal'),
-    (3, 99.99, 'Shipped', '789 Pine St', 'Debit Card'),
-    (4, 15.99, 'Delivered', '321 Maple St', 'Credit Card'),
-    (5, 25.99, 'Cancelled', '654 Cedar St', 'PayPal'),
-    (6, 19.99, 'Pending', '987 Birch St', 'Credit Card'),
-    (7, 12.99, 'Processing', '111 Spruce St', 'Debit Card'),
-    (8, 8.99, 'Shipped', '222 Willow St', 'Credit Card'),
-    (9, 6.99, 'Delivered', '333 Redwood St', 'PayPal'),
-    (10, 14.99, 'Pending', '444 Ash St', 'Debit Card')
-;
-
--- Insert data into OrderItems table
-INSERT INTO OrderItems (OrderID, ProductID, Quantity, UnitPrice) VALUES
-    (1, 1, 2, 12.99),
-    (1, 2, 1, 8.99),
-    (2, 3, 5, 3.99),
-    (3, 4, 1, 15.99),
-    (4, 5, 1, 25.99),
-    (5, 6, 1, 99.99),
-    (6, 7, 2, 19.99),
-    (7, 8, 3, 4.99),
-    (8, 9, 1, 6.99),
-    (9, 10, 1, 14.99)
+INSERT INTO Products (VendorID, Category, ProductName, Description, Price, StockQuantity) VALUES
+    (1, 'Vegetable', 'Carrots', 'Fresh carrots', 2.99, 100),
+    (1, 'Fruit', 'Apples', 'Crisp and juicy apples', 3.99, 150),
+    (1, 'Dairy', 'Milk', 'Fresh milk', 4.99, 200),
+    (2, 'Meat', 'Grass-fed Beef', 'Premium grass-fed beef', 12.99, 50),
+    (2, 'Grain', 'Rice', 'High-quality rice', 6.99, 300),
+    (2, 'Snack', 'Granola Bars', 'Healthy granola bars', 1.99, 500),
+    (3, 'Vegetable', 'Spinach', 'Fresh spinach', 2.49, 120),
+    (3, 'Fruit', 'Bananas', 'Sweet bananas', 1.99, 180),
+    (3, 'Dairy', 'Cheese', 'Delicious cheese', 5.99, 80),
+    (4, 'Meat', 'Free-range Chicken', 'Tender free-range chicken', 9.99, 60),
+    (4, 'Grain', 'Quinoa', 'Nutritious quinoa', 7.99, 100),
+    (4, 'Snack', 'Trail Mix', 'Tasty trail mix', 3.99, 250),
+    (5, 'Vegetable', 'Potatoes', 'Fresh potatoes', 1.99, 200),
+    (5, 'Fruit', 'Oranges', 'Juicy oranges', 4.49, 150),
+    (5, 'Dairy', 'Yogurt', 'Creamy yogurt', 3.49, 100),
+    (6, 'Meat', 'Wild-caught Salmon', 'Fresh wild-caught salmon', 14.99, 40),
+    (6, 'Grain', 'Oats', 'Healthy oats', 4.99, 300),
+    (6, 'Snack', 'Popcorn', 'Light popcorn', 2.49, 400),
+    (7, 'Vegetable', 'Broccoli', 'Fresh broccoli', 2.99, 120),
+    (7, 'Fruit', 'Strawberries', 'Sweet strawberries', 5.99, 100),
+    (7, 'Dairy', 'Butter', 'Rich butter', 4.49, 80),
+    (8, 'Meat', 'Pork', 'Tender pork', 11.99, 70),
+    (8, 'Grain', 'Barley', 'Nutritious barley', 3.99, 150),
+    (8, 'Snack', 'Cookies', 'Delicious cookies', 2.99, 300),
+    (9, 'Vegetable', 'Peppers', 'Fresh peppers', 3.49, 130),
+    (9, 'Fruit', 'Grapes', 'Sweet grapes', 4.99, 140),
+    (9, 'Dairy', 'Cream', 'Smooth cream', 3.99, 90),
+    (10, 'Meat', 'Turkey', 'Juicy turkey', 13.99, 50),
+    (10, 'Grain', 'Wheat', 'High-quality wheat', 5.99, 200),
+    (10, 'Snack', 'Chips', 'Crispy chips', 2.49, 350)
 ;
 
 -- Insert data into Reviews table
-INSERT INTO Reviews (ProductID, user_id, Rating, Comment) VALUES
+INSERT INTO Reviews (VendorID, user_id, Rating, Comment) VALUES
     (1, 1, 5, 'Great product! Very eco-friendly.'),
     (2, 2, 4, 'Good quality, but a bit expensive.'),
-    (3, 3, 5, 'Love this organic rice!'),
+    (3, 3, 5, 'Love this rice!'),
     (4, 4, 4, 'Comfortable and sustainable.'),
     (5, 5, 5, 'Works perfectly and eco-friendly.'),
     (6, 6, 4, 'Good tent, but could be cheaper.'),
