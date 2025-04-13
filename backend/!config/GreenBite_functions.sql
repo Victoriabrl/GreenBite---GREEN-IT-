@@ -20,7 +20,8 @@ DROP PROCEDURE IF EXISTS get_product_by_id;
 DELIMITER //
 CREATE PROCEDURE get_product_by_id(IN product_id INT)
 BEGIN
-    SELECT * FROM products
+    SELECT VendorID, BusinessName, ProductName, Description, Price, StockQuantity, EcoRating, ImageURL
+    FROM products INNER JOIN Vendors USING (VendorID)
     WHERE ProductID = product_id;
 END //
 DELIMITER ;

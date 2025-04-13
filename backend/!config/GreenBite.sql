@@ -31,7 +31,6 @@ CREATE TABLE Vendors (
     BusinessDescription TEXT,
     BusinessAddress VARCHAR(255) NOT NULL,
     Website VARCHAR(100),
-    Logo VARCHAR(255),
     IsVerified BOOLEAN DEFAULT FALSE,
     RegistrationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
