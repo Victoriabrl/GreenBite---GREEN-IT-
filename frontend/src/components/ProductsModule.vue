@@ -49,8 +49,8 @@
 
                 <tbody>
                   <tr>
-                    <td>{{ product.Price }}€ / kg</td>
-                    <td>{{ product.StockQuantity }} kg left</td>
+                    <td>{{ product.Price }}€</td>
+                    <td>{{ product.Quantity }} kg</td>
                   </tr>
                   <tr>
                     <td colspan="2">
