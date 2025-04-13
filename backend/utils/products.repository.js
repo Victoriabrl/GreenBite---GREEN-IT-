@@ -26,7 +26,7 @@ module.exports = {
         try {
             let sql = "CALL get_products_sorted_by_due_date()";
             const [rows, fields] = await pool.execute(sql);
-            console.log("Products FETCHED: " + rows.length);
+            console.log("Products FETCHED: " + rows[0].length);
             return rows[0];
             
         } catch (err) {
@@ -39,7 +39,7 @@ module.exports = {
         try {
             let sql = "CALL get_product_by_id(?)";
             const [rows, fields] = await pool.execute(sql, [id]);
-            console.log("Product FETCHED: " + rows[0].length + " for id: " + id);
+            console.log("Product FETCHED: " + rows[0][0].length + " for id: " + id);
             return rows[0][0];
             
         } catch (err) {
