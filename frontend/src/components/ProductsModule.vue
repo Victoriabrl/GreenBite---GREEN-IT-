@@ -154,7 +154,7 @@
   
     created() {   // executed when the component is created
       //this.getAllData();
-      //this.refreshcurrentProduct();
+      this.refreshcurrentProduct();
     }
   };
 </script>
