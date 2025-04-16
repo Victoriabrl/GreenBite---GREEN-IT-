@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users (
     user_email VARCHAR(100) NOT NULL UNIQUE,
     user_password VARCHAR(100),
     user_created DATETIME,
-    user_role ENUM('ADMIN', 'USER') NOT NULL
+    user_role ENUM('ADMIN', 'USER', 'VENDOR') NOT NULL
 );
 
 -- Table for Vendors
@@ -57,8 +57,7 @@ CREATE TABLE Orders (
     user_id INT NOT NULL,
     ProductID INT NOT NULL,
     OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    TotalAmount DECIMAL(10, 2) NOT NULL,
-    PaymentMethod ENUM('Credit Card', 'Debit Card', 'PayPal') NOT NULL,
+    PaymentMethod ENUM('Credit_Card', 'Debit_Card', 'PayPal') NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE
 );

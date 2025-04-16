@@ -60,3 +60,64 @@ DELIMITER ;
 -- CALL get_products_by_category('Vegetable,Fruit');  -- Get vegetable and fruit products
 -- CALL get_products_by_category('Dairy');           -- Get only dairy products
 -- CALL get_products_by_category('');               -- Get all products
+
+
+
+
+
+
+
+-- PROCEDURE to place an order
+DROP PROCEDURE IF EXISTS place_order;
+DELIMITER //
+
+CREATE PROCEDURE place_order(
+    IN p_user_id INT,
+    IN p_product_id INT,
+    IN p_payment_method ENUM('Credit_Card', 'Debit_Card', 'PayPal')
+)
+BEGIN
+    DECLARE v_price DECIMAL(10, 2);
+    DECLARE v_available_quantity DECIMAL(10, 2);
+    DECLARE v_total_amount DECIMAL(10, 2);
+    DECLARE v_product_available BOOLEAN;
+    
+    -- Start transaction
+    START TRANSACTION;
+    
+    -- Get product information
+    SELECT Price, Quantity, IsAvailable 
+    INTO v_price, v_available_quantity, v_product_available
+    FROM Products 
+    WHERE ProductID = p_product_id;
+    
+    -- Check if product exists and is available
+    IF v_price IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product not found';
+        ROLLBACK;
+    ELSEIF NOT v_product_available THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Product is not available';
+        ROLLBACK;
+    ELSE
+        
+        -- Insert order
+        INSERT INTO Orders (user_id, ProductID, PaymentMethod)
+        VALUES (p_user_id, p_product_id, p_payment_method);
+        
+        -- Update product quantity
+        UPDATE Products 
+        SET
+            IsAvailable = FALSE
+        WHERE ProductID = p_product_id;
+        
+        COMMIT;
+        
+        SELECT 'Order placed successfully' AS message, 
+               LAST_INSERT_ID() AS OrderID;
+    END IF;
+END //
+
+DELIMITER ;
+
+-- Example usage:
+-- CALL place_order(1, 2, 'Credit Card');

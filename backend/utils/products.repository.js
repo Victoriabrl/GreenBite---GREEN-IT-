@@ -63,5 +63,12 @@ module.exports = {
             row.DueDate = new Date(row.DueDate).toISOString().split('T')[0];
         });
         return rows[0];
+    },
+
+    async orderProduct(userId, productId, paymentMethod) {
+        let sql = "CALL place_order(?, ?, ?)";
+        const [rows, fields] = await pool.execute(sql, [userId, productId, paymentMethod]);
+        console.log("Order PLACED: " + rows[0].length + " for user: " + userId + " and product: " + productId);
+        return rows[0][0];
     }
 };
