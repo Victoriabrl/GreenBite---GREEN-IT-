@@ -120,4 +120,4 @@ END //
 DELIMITER ;
 
 -- Example usage:
--- CALL place_order(1, 2, 'Credit Card');
+-- CALL place_order(1, 2, 'Credit_Card');

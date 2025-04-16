@@ -16,8 +16,9 @@ router.get("/role", getRoleAction);
 router.get("/id", getIDAction);
 
 async function getIDAction(request, response) {
-  if (request.isAuthenticated()) { // Do we have an authenticated user?
-    response.send(request.user.user_id);
+  if (request.isAuthenticated()) {
+    let userJson = JSON.stringify(request.user.user_id);
+    response.send(userJson);
   } else {
     response.send("Authentication required");
   }

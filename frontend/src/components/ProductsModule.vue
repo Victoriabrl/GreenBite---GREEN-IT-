@@ -9,6 +9,48 @@
       </p>
 
       {{ currentProduct }}
+      <hr>
+
+      <div>
+        <!-- payment method checkboxes, possible values: 'Credit_Card', 'Debit_Card', 'PayPal' -->
+        <div class="payment-methods">
+          <h3>Buy now!</h3>
+          <p>
+            Check the <a :href="'/#/vendors/show/'+ currentProduct.VendorID">vendor's details</a> (physical address, email...)<br/>
+            If you are interested in this product, buy it now and go pick it up at the vendor's location!<br/>
+          </p>
+          <table class="table table-bordered payment-checkbox">
+            <tbody>
+              <tr>
+                <td>
+            <label v-for="method in ['Credit_Card', 'Debit_Card', 'PayPal']" :key="method">
+              <input 
+                type="radio" 
+                name="paymentMethod" 
+                :value="method" 
+                v-model="selectedPaymentMethod"
+              >
+              {{ method.replace('_', ' ') }}
+            </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+          <button 
+            class="payment-button" 
+            @click="orderProduct(currentProduct.ProductID, selectedPaymentMethod)"
+            :disabled="!selectedPaymentMethod"
+          >
+            Pay Now
+          </button>
+                </td>
+              </tr>
+                  
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
 
@@ -81,6 +123,7 @@
         pageNumber: 1,
         pageSize: 30,
         numberOfPages: 0,
+        selectedPaymentMethod: null,
   
         filterArray: [],
         productArray: [],
@@ -131,7 +174,27 @@
         }
       },
 
-      //async orderProduct()
+      async orderProduct(productID, paymentMethod) {
+        let userID = null;
+        try {
+          let responseUser = await this.$http.get("http://localhost:9000/api/auth/id");
+          userID = responseUser.data;
+          if (userID === "Authentication required") {
+            alert("You are not logged in!");
+            return;
+          }
+        } catch (ex) {
+          console.log(ex);
+        }
+        try {
+          let responseProduct = await this.$http.get("http://localhost:9000/api/products/order/" + userID + "/" + this.$props.id + "/" + paymentMethod);
+          alert("Product ordered successfully! You will receive an email for the payment.");
+          this.$router.push('/products/list/all');
+  
+        } catch (ex) {
+          console.log(ex);
+        }
+      },
     },
   
     watch: {   // watch for changes in the variables
