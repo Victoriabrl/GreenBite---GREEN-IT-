@@ -129,7 +129,9 @@
         } catch (ex) {
           console.log(ex);
         }
-      }
+      },
+
+      //async orderProduct()
     },
   
     watch: {   // watch for changes in the variables

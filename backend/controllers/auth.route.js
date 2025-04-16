@@ -13,6 +13,15 @@ router.get("/protected", protectedGetAction); // execute authorization in action
 router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
 router.get("/role", getRoleAction);
+router.get("/id", getIDAction);
+
+async function getIDAction(request, response) {
+  if (request.isAuthenticated()) { // Do we have an authenticated user?
+    response.send(request.user.user_id);
+  } else {
+    response.send("Authentication required");
+  }
+}
 
 async function getRoleAction(request, response) {
   if (request.isAuthenticated()) { // Do we have an authenticated user?
