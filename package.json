@@ -1,0 +1,20 @@
+{
+  "name": "greenbite---green-it-",
+  "version": "1.0.0",
+  "description": "Mini-Hackathon Project: \"The greenest website\" <br/>\r Objective: design, implement and analyze the carbon footprint of a website. The goal is to create a website that is as environmentally friendly as possible, while minimizing its environmental impact.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Victoriabrl/GreenBite---GREEN-IT-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Victoriabrl/GreenBite---GREEN-IT-/issues"
+  },
+  "homepage": "https://github.com/Victoriabrl/GreenBite---GREEN-IT-#readme"
+}
