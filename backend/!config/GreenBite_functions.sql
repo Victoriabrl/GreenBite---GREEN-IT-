@@ -1,5 +1,32 @@
 USE GreenBite;
 
+DROP PROCEDURE IF EXISTS get_all_vendors;
+DELIMITER //
+
+CREATE PROCEDURE get_all_vendors()
+BEGIN
+    SELECT VendorID, BusinessName, BusinessDescription FROM Vendors;
+END //
+
+DELIMITER ;
+-- CALL get_all_vendors();  -- Call the function to get all vendors
+
+DROP PROCEDURE IF EXISTS get_vendor_by_id;
+DELIMITER //
+
+CREATE PROCEDURE get_vendor_by_id(IN vendor_id INT)
+BEGIN
+    SELECT BusinessName, BusinessDescription, BusinessAddress, Website, Rating, user_email
+    FROM Vendors
+    INNER JOIN Reviews USING (VendorID)
+    INNER JOIN Users ON Users.user_id = Vendors.user_id
+    WHERE VendorID = vendor_id;
+END //
+
+DELIMITER ;
+-- CALL get_vendor_by_id(1);  -- Call the function to get vendor by ID
+
+
 -- PROCEDURE to get all the products sorted by due date descending
 DROP PROCEDURE IF EXISTS get_products_sorted_by_due_date;
 DELIMITER //

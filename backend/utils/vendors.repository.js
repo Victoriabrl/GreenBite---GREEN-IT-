@@ -20,10 +20,10 @@ module.exports = {
 
     async getAllVendors() {
         try {
-            let sql = "SELECT * FROM vendors";
+            let sql = "CALL get_all_vendors()";
             const [rows, fields] = await pool.execute(sql);
-            console.log("Vendors FETCHED: " + rows.length);
-            return rows;
+            console.log("Vendors FETCHED: " + rows[0].length);
+            return rows[0];
             
         } catch (err) {
             console.log(err);
@@ -33,10 +33,10 @@ module.exports = {
 
     async getVendorById(id) {
         try {
-            let sql = "SELECT * FROM vendors WHERE VendorID = ?";
+            let sql = "CALL get_vendor_by_id(?)";
             const [rows, fields] = await pool.execute(sql, [id]);
-            console.log("Vendors FETCHED: " + rows.length + " for id: " + id);
-            return rows[0];
+            console.log("Vendors FETCHED: " + rows[0][0].length + " for id: " + id);
+            return rows[0][0];
             
         } catch (err) {
             console.log(err);
