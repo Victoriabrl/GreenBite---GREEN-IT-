@@ -45,7 +45,9 @@ module.exports = {
             const [rows, fields] = await pool.execute(sql, [id]);
             console.log("Product FETCHED: " + rows[0][0].length + " for id: " + id);
             // modify the date format to YYYY-MM-DD
-            //rows[0].DueDate = new Date(row.DueDate).toISOString().split('T')[0];
+            rows[0].forEach((row) => {
+                row.DueDate = new Date(row.DueDate).toISOString().split('T')[0];
+            });
             return rows[0][0];
             
         } catch (err) {
