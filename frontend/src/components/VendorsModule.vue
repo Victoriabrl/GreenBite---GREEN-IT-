@@ -1,178 +1,298 @@
 <template>
-    <div>
-        <div v-if="action === 'show'">
-            <h1>Vendor: {{ currentVendor.BusinessName }}</h1>
-            <p>{{ currentVendor.Description }}</p>
-            <p>Rating: {{ currentVendor.AverageRating }}</p>
+    <div class="container">
+        <!-- Vendor Details Page -->
+        <div v-if="action === 'show'" class="vendor-details">
+            <div class="vendor-header">
+                <h1>{{ currentVendor.BusinessName }}</h1>
+                <span class="badge">Vendor</span>
+            </div>
             
-            {{ currentVendor }}
+            <div class="vendor-info">
+                <div class="vendor-description">
+                    <p>{{ currentVendor.BusinessDescription }}</p>
+                    <div class="vendor-rating">
+                        <span class="label">Rating:</span>
+                        <span class="value">{{ currentVendor.Rating }} ★</span>
+                    </div>
+                </div>
+                
+                <div class="vendor-meta">
+                    <div class="meta-item">
+                        <span class="label">Address:</span>
+                        <span class="value">{{ currentVendor.BusinessAddress }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="label">Email:</span>
+                        <span class="value">{{ currentVendor.user_email }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- v-if is a conditional rendering -->
-        <div v-if="action === 'list'">
-            <h1>Vendors List</h1>
-
-            <ul class="vendors-list">
-                <li v-for="vendor of vendorArray" v-bind:key="vendor.VendorID" class="zoom-hover">
-                    <a :href="'/#/vendors/show/' + vendor.VendorID">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th colspan="3">
-                                        {{ vendor.BusinessName }}
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th colspan="3">
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </a>
-                </li>
-                {{ vendorArray }}
-            </ul>
+        <!-- Vendors List Page -->
+        <div v-if="action === 'list'" class="vendors-page">
+            <div class="vendors-section">
+                <h1>Our Vendors</h1>
+                <p class="section-description">Discover local businesses committed to reducing food waste</p>
+                
+                <div class="vendors-grid">
+                    <div v-for="vendor of vendorArray" v-bind:key="vendor.VendorID" class="vendor-card">
+                        <a :href="'/#/vendors/show/' + vendor.VendorID" class="vendor-link">
+                            <div class="vendor-name">{{ vendor.BusinessName }}</div>
+                            <div class="vendor-short-description">
+                                {{ vendor.BusinessDescription }}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'Vendors',
-    props: ['action', 'id'],  // properties that can be passed to the component
-    // action: show, list
-    // id: vendor_id
-    data() {
-        return {
-            pageNumber: 1,
-            pageSize: 30,
-            numberOfPages: 0,
-
-            vendorArray: [],
-
-            currentVendor: {
-                // Default empty vendor object
-            }
-        };
-    },
-
-    methods: {
-        async getAllData(pageNumber, pageSize) {
-            try {
-                let responseVendor = await this.$http.get('http://localhost:9000/api/vendors/list');
-                this.vendorArray = await responseVendor.data;
-            } catch (exception) {
-                console.log(exception);
-            }
+        name: 'Vendors',
+        props: ['action', 'id'],
+        data() {
+                return {
+                        pageNumber: 1,
+                        pageSize: 30,
+                        numberOfPages: 0,
+                        vendorArray: [],
+                        currentVendor: {}
+                };
         },
 
-        async refreshCurrentVendor() {
-            if (this.$props.id === "all" || this.$props.id === "0") {
-                this.currentVendor = {};
-                return;
-            }
-            try {
-                let responseVendor = await this.$http.get("http://localhost:9000/api/vendors/show/" + this.$props.id);
-                this.currentVendor = responseVendor.data;
-            } catch (ex) {
-                console.log(ex);
-            }
-        }
-    },
+        methods: {
+                async getAllData(pageNumber, pageSize) {
+                        try {
+                                let responseVendor = await this.$http.get('http://localhost:9000/api/vendors/list');
+                                this.vendorArray = await responseVendor.data;
+                        } catch (exception) {
+                                console.log(exception);
+                        }
+                },
 
-    watch: {
-        id: function(newId, oldId) {
-            this.refreshCurrentVendor();
+                async refreshCurrentVendor() {
+                        if (this.$props.id === "all" || this.$props.id === "0") {
+                                this.currentVendor = {};
+                                return;
+                        }
+                        try {
+                                let responseVendor = await this.$http.get("http://localhost:9000/api/vendors/show/" + this.$props.id);
+                                this.currentVendor = responseVendor.data;
+                        } catch (ex) {
+                                console.log(ex);
+                        }
+                }
         },
 
-        action: function(newAction, oldAction) {
-            if (newAction === 'list') {
+        watch: {
+                id: function(newId, oldId) {
+                        this.refreshCurrentVendor();
+                },
+
+                action: function(newAction, oldAction) {
+                        if (newAction === 'list') {
+                                this.getAllData();
+                        }
+                },
+
+                pageNumber: function(newPageNumber, oldPageNumber) {
+                        this.getAllData();
+                },
+
+                pageSize: function(newPageSize, oldPageSize) {
+                        this.getAllData();
+                }
+        },
+
+        created() {
                 this.getAllData();
-            }
-        },
-
-        pageNumber: function(newPageNumber, oldPageNumber) {
-            this.getAllData();
-        },
-
-        pageSize: function(newPageSize, oldPageSize) {
-            this.getAllData();
+                this.refreshCurrentVendor();
         }
-    },
-
-    created() {
-        this.getAllData();
-        this.refreshCurrentVendor();
-    }
 };
 </script>
 
 <style scoped>
-    h1, h2 {
-        font-weight: normal;
-    }
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    a {
-        color: #000000;
-        text-decoration: none;
-    }
+/* Common Styles */
+h1 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
 
-    a:hover {
-        text-decoration: underline;
-    }
+h3, h4 {
+    color: #34495e;
+    margin-bottom: 15px;
+}
 
-    .new-button {
-        padding: 10px;
-        margin-bottom: 20px;
-        margin-top: -30px;
-    }
+a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+}
 
-    /************ VENDORS LIST ************/
-    .vendors-list {
-        margin: auto;
-        margin-top: 20px;
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        max-width: 1300px;
-        list-style-type: none;
-    }
+a:hover {
+    text-decoration: underline;
+}
 
-    .vendors-list li {
-        margin: 0 20px 20px;
-        text-align: center;
-        position: relative;
-        max-width: 200px;
-    }
-    
-    .vendors-list li img {
-        max-width: 100px;
-        max-height: 100px;
-    }
+.section-description {
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    text-align: center;
+}
 
-    .vendors-list tbody {
-        text-align: center;
-        font-size: 0.8em;
-    }
+/* Vendor Details Page */
+.vendor-details {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
 
-    /************ Pagination ************/
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-    }
+.vendor-header {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eaeaea;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    .pagination input[type="number"] {
-        width: 70px;
-        text-align: center;
-    }
+.badge {
+    background-color: #3498db;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
 
-    table {
-        width: 80%;
-        margin: 20px auto;
-    }
+.vendor-info {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.vendor-description p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.vendor-rating {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.vendor-meta {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 6px;
+}
+
+.meta-item {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.label {
+    font-weight: 600;
+    color: #7f8c8d;
+}
+
+.value {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.vendor-products-section {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #eaeaea;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.view-all-link {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.view-all-link:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+}
+
+/* Vendors List Page */
+.vendors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.vendor-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    height: 180px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.vendor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.vendor-link {
+    display: block;
+    padding: 20px;
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+}
+
+.vendor-link:hover {
+    text-decoration: none;
+}
+
+.vendor-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.vendor-rating-display {
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.stars {
+    color: #f39c12;
+}
+
+.vendor-short-description {
+    color: #7f8c8d;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
 </style>
