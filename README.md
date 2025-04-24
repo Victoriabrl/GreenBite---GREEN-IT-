@@ -29,3 +29,12 @@ Backend
 cd backend
 node server.js
 ```
+
+
+
+## To Do
+- remove animations / shadows
+- globalize css
+- system fonts
+- pages for vendors
+- RBAC
