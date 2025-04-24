@@ -54,7 +54,7 @@
             </div>
             
             <button 
-              class="payment-button" 
+              class="btn primary payment-button" 
               @click="orderProduct(currentProduct.ProductID, selectedPaymentMethod)"
               :disabled="!selectedPaymentMethod"
             >
@@ -80,7 +80,7 @@
             >
             <span class="checkbox-label">{{ category }}</span>
           </label>
-          <button class="filter-button" @click="getAllDataWithFilters()">Apply Filters</button>
+          <button class="btn primary filter-button" @click="getAllDataWithFilters()">Apply Filters</button>
         </div>
       </div>
 
@@ -359,19 +359,11 @@ a:hover {
 }
 
 .payment-button {
-  background-color: #27ae60;
-  color: white;
-  border: none;
   padding: 12px 24px;
   border-radius: 4px;
   font-weight: 600;
-  cursor: pointer;
   width: 100%;
   /*transition: background-color 0.2s;*/
-}
-
-.payment-button:hover {
-  background-color: #219653;
 }
 
 .payment-button:disabled {
@@ -410,18 +402,7 @@ a:hover {
 }
 
 .filter-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 20px;
-  font-weight: 500;
-  cursor: pointer;
   margin-left: auto;
-}
-
-.filter-button:hover {
-  background-color: #2980b9;
 }
 
 .products-grid {

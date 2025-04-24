@@ -32,7 +32,7 @@
                   <a href="#/profile/login"> Login</a>
                 </li>
                 <li>
-                  <input type="button" @click="sendLogoutRequest('get', 'logout')" value="LOGOUT" />
+                  <input type="button" @click="sendLogoutRequest('get', 'logout')" value="LOGOUT" class="btn primary"/>
                 </li>
               </ul>
             </div>

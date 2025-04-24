@@ -34,6 +34,36 @@ export default {
     color: #2c3e50;
   }
 
+
+  /************ BUTTONS ************/  
+  .btn {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0 10px;
+    border: none;
+  }
+  
+
+  .primary {
+    background-color: #2c8c3c;
+    color: white;
+  }
+  .primary:hover {
+    background-color: #155f21;
+    color: white;
+  }
+
+  .secondary {
+    background-color: white;
+    color: #2c8c3c;
+    border: 1px solid #2c8c3c;
+  }
+  .secondary:hover {
+    background-color: #cbcbcb;
+  }
+
   /************ PRODUCTS LIST ************/
   table {
     width: 80%;

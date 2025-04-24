@@ -105,7 +105,7 @@
           <label for="password">Password:</label>
           <input type="password" class="form-control" id="password" name="password" v-model="currentUser.user_password">
           <br>
-          <button type="submit" @click="sendEditRequest()" class="zoom-hover send-update">Submit</button>
+          <button type="submit" @click="sendEditRequest()" class="btn primary">Submit</button>
           <p> you already have an account? <a href="#/profile/login">Login</a></p>
         </div>
       </div>
@@ -122,7 +122,7 @@
           <label for="password">Password:</label>
           <input type="password" class="form-control" id="password" name="password" required>
           <br>
-          <button type="submit" @click="submitAuth()" class="zoom-hover">Submit</button>
+          <button type="submit" @click="submitAuth()" class="btn primary">Submit</button>
           <p> you don't have an account? <a href="#/profile/register">Register</a></p>
         </div>
       </div>
