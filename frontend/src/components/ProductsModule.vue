@@ -435,12 +435,12 @@ a:hover {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  /*transition: transform 0.2s, box-shadow 0.2s;*/
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .product-card:hover {
-  /*transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);*/
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .product-link {
