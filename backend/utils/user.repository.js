@@ -33,7 +33,7 @@ module.exports = {
     async getUserById(user_id) {
         let connection;
         try {
-            let sql = "SELECT user_name, user_email, user_created, user_role FROM users WHERE user_id = ?";
+            let sql = "SELECT user_id, user_name, user_email, user_created, user_role FROM users WHERE user_id = ?";
             const [rows, fields] = await pool.execute(sql, [user_id]);
             if (rows.length === 1) {
                 return rows[0];
