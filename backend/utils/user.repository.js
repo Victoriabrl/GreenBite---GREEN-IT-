@@ -33,7 +33,7 @@ module.exports = {
     async getUserById(user_id) {
         let connection;
         try {
-            let sql = "SELECT * FROM users WHERE user_id = ?";
+            let sql = "SELECT user_name, user_email, user_created, user_role FROM users WHERE user_id = ?";
             const [rows, fields] = await pool.execute(sql, [user_id]);
             if (rows.length === 1) {
                 return rows[0];
@@ -135,6 +135,21 @@ module.exports = {
         } catch (err) {
           console.log(err);
           throw err;
+        }
+    },
+
+    async getVendorIdFromUserId(userId) {
+        try {
+            let sql = "SELECT VendorID FROM Vendors WHERE user_id = ?";
+            const [rows, fields] = await pool.execute(sql, [userId]);
+            if (rows.length == 1) {
+                return rows[0].VendorID;
+            } else {
+                return false;
+            }
+        } catch (err) {
+            console.log(err);
+            throw err;
         }
     }
 };

@@ -9,27 +9,38 @@ const userRepo = require("../utils/user.repository");
 // MAC/DAC/RBAC, Claims-based authorization, Policy-based authorization, Resource-based authorization
 router.get("/user", auth.authorizeRequest("USER"), userdataAction); // expose function only for USER roles
 router.get("/admin", auth.authorizeRequest("ADMIN"), userdataAction); // expose function only for ADMIN roles
+router.get("/vendor", auth.authorizeRequest("VENDOR"), userdataAction); // expose function only for VENDOR roles
 router.get("/protected", protectedGetAction); // execute authorization in action method: needed for resource-based auth
 router.post("/login", loginPostAction);
 router.get("/logout", logoutAction);
 router.get("/role", getRoleAction);
 router.get("/id", getIDAction);
+router.get("/idVendor", auth.authorizeRequest("VENDOR"), getIDVendorAction);
+
+async function getIDVendorAction(request, response) {
+  let userID = JSON.stringify(request.user.user_id);
+
+  var vendorID = await userRepo.getVendorIdFromUserId(userID);
+  response.send(JSON.stringify(vendorID));
+}
 
 async function getIDAction(request, response) {
   if (request.isAuthenticated()) {
     let userJson = JSON.stringify(request.user.user_id);
     response.send(userJson);
-  } else {
+  }
+  else {
     response.send("Authentication required");
   }
 }
 
 async function getRoleAction(request, response) {
   if (request.isAuthenticated()) { // Do we have an authenticated user?
-    if (request.user.user_role === "ADMIN") 
+    /*if (request.user.user_role === "ADMIN") 
       response.send("ADMIN");
     else
-      response.send("USER");
+      response.send("USER");*/
+    response.send(request.user.user_role)
   }
   else
     response.send("GUEST");
