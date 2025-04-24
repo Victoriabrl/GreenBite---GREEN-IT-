@@ -5,19 +5,6 @@ pool = require(path);
 
 
 module.exports = {
-    getBlankGame() {
-        return {
-            "VendorID": 0,
-            "UserID": 0,
-            "BusinessName": "xxx",
-            "BusinessDescription": "xxx",
-            "BusinessAddress": "xxx",
-            "Website": "xxx",
-            "Logo": "xxx",
-            "IsVerified": 0
-        };
-    },
-
     async getAllVendors() {
         try {
             let sql = "CALL get_all_vendors()";
