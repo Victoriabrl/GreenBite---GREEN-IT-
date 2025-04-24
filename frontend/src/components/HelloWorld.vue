@@ -10,8 +10,8 @@
         <h2>Reduce Food Waste, Save Money</h2>
         <p>Purchase surplus fruits and vegetables directly from local eco-friendly vendors</p>
         <div class="cta-buttons">
-          <button class="btn primary">Shop Now</button>
-          <button class="btn secondary">Sell Produce</button>
+          <a href="#/products/list/all/" class="btn primary">Shop Now</a>
+          <a href="#/profile/register" class="btn secondary">Sell Produce</a>
         </div>
       </div>
     </section>
