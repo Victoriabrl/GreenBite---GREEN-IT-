@@ -4,6 +4,10 @@ Mini-Hackathon Project: "The greenest website" <br/>
 Objective: design, implement and analyze the carbon footprint of a website. The goal is to create a website that is as environmentally friendly as possible, while minimizing its environmental impact.
 
 
+## The project
+
+Brief description of the different parts of the site and the functionalities.
+
 ## Configuration
 
 - Install [node.js](https://nodejs.org/fr/download) (if not done before)
