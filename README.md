@@ -38,3 +38,4 @@ node server.js
 - system fonts
 - pages for vendors
 - RBAC
+- change js var to let
