@@ -44,6 +44,4 @@ node server.js
 
 ### missing
 
-- see all your products as a vendor
-- see all your orders as a user
 - delete / update product
