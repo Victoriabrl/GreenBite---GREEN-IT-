@@ -72,5 +72,12 @@ module.exports = {
         const [rows, fields] = await pool.execute(sql, [userId, productId, paymentMethod]);
         console.log("Order PLACED: " + rows[0].length + " for user: " + userId + " and product: " + productId);
         return rows[0][0];
+    },
+
+    async addProduct(p_vendor_id, p_category, p_product_name, p_description, p_price, p_quantity, p_due_date ) {
+        let sql = "CALL add_product(?, ?, ?, ?, ?, ?, ?)";
+        const [okPacket, fields] = await pool.execute(sql, [p_vendor_id, p_category, p_product_name, p_description, p_price, p_quantity, p_due_date]);
+        console.log("Product ADDED: " + JSON.stringify(okPacket));//rows[0].length + " for vendor: " + VendorID);
+        return okPacket.insertId;
     }
 };

@@ -65,6 +65,56 @@
       </div>
     </div>
 
+    <div v-if="action === 'edit'">
+      <h1>Edit Product</h1>
+      <div class="product-details">
+      <!-- edit the fields: Category, ProductName, Description, Price, Quantity, DueDate -->
+      <div class="product-header">
+        <h1>
+          <label for="productName">Product Name:</label>
+          <input type="text" class="form-control" id="productName" v-model="currentProduct.ProductName">
+        </h1>
+
+        <span class="badge">
+          <label for="category">Category:</label>
+          <select class="form-control" id="category" v-model="currentProduct.Category">
+            <option value="Vegetable">Vegetable</option>
+            <option value="Fruit">Fruit</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Meat">Meat</option>
+            <option value="Grain">Grain</option>
+            <option value="Snack">Snack</option>
+          </select>
+        </span>
+      </div>
+        
+
+      <div class="product-info">
+        <div class="product-description">
+          <label for="description">Description:</label>
+          <textarea class="form-control" id="description" v-model="currentProduct.Description"></textarea>
+        </div>
+        
+        <div class="product-meta">
+          <div class="meta-item">
+            <span class="label"><label for="price">Price: </label></span>
+            <span class="value"><input type="number" class="form-control" id="price" v-model="currentProduct.Price">€</span>
+          </div>
+          <div class="meta-item">
+            <span class="label"><label for="quantity">Quantity: </label></span>
+            <span class="value"><input type="number" class="form-control" id="quantity" v-model="currentProduct.Quantity"> kg</span>
+          </div>
+          <div class="meta-item">
+            <span class="label"><label for="dueDate">Good Before: </label></span>
+            <span class="value"><input type="date" class="form-control" id="dueDate" v-model="currentProduct.DueDate"></span>
+          </div>
+        </div>
+      </div>
+      
+      </div>
+      <button type="submit" @click="sendEditRequest()" class="btn primary">Save Changes</button>
+    </div>
+
     <!-- Products List Page -->
     <div v-if="action === 'list'" class="products-page">
       <div class="filter-section">
@@ -120,9 +170,6 @@
 
     data() {
       return {   // variables that can be used in the template
-        pageNumber: 1,
-        pageSize: 30,
-        numberOfPages: 0,
         selectedPaymentMethod: null,
   
         filterArray: [],
@@ -195,6 +242,33 @@
           console.log(ex);
         }
       },
+
+      async sendEditRequest() {
+        try {
+          if (this.$props.id === "all" || this.$props.id === "0") {
+            // add new product
+            let responseProduct = await this.$http.post("http://localhost:9000/api/products/add",
+              {
+                ProductName: this.currentProduct.ProductName,
+                Category: this.currentProduct.Category,
+                Description: this.currentProduct.Description,
+                Price: this.currentProduct.Price,
+                Quantity: this.currentProduct.Quantity,
+                DueDate: this.currentProduct.DueDate
+              }
+            );
+            alert("Product edited successfully!");
+            this.$router.push('/products/list/all');
+          }
+          else {
+            // edit existing product
+          }
+        } catch (ex) {
+          console.log(ex);
+        }
+      },
+
+
     },
   
     watch: {   // watch for changes in the variables

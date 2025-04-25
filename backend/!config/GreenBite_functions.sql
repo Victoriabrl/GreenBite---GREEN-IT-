@@ -47,7 +47,7 @@ DROP PROCEDURE IF EXISTS get_product_by_id;
 DELIMITER //
 CREATE PROCEDURE get_product_by_id(IN product_id INT)
 BEGIN
-    SELECT VendorID, BusinessName, ProductName, Description, Price, Quantity, DueDate
+    SELECT VendorID, Category, BusinessName, ProductName, Description, Price, Quantity, DueDate
     FROM products INNER JOIN Vendors USING (VendorID)
     WHERE ProductID = product_id;
 END //
@@ -148,3 +148,61 @@ DELIMITER ;
 
 -- Example usage:
 -- CALL place_order(1, 2, 'Credit_Card');
+
+
+
+
+
+-- PROCEDURE to add a new product
+DROP PROCEDURE IF EXISTS add_product;
+DELIMITER //
+
+CREATE PROCEDURE add_product(
+    IN p_vendor_id INT,
+    IN p_category ENUM('Vegetable', 'Fruit', 'Dairy', 'Meat', 'Grain', 'Snack'),
+    IN p_product_name VARCHAR(100),
+    IN p_description TEXT,
+    IN p_price DECIMAL(10, 2),
+    IN p_quantity DECIMAL(10, 2),
+    IN p_due_date DATETIME
+)
+BEGIN
+    DECLARE vendor_exists INT;
+    
+    -- Check if vendor exists
+    -- SELECT COUNT(*) INTO vendor_exists FROM Vendors WHERE VendorID = p_vendor_id;
+    
+    -- IF vendor_exists = 0 THEN
+    --     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Vendor does not exist';
+    -- ELSE
+        -- Insert new product
+        INSERT INTO Products (
+            VendorID, 
+            Category, 
+            ProductName, 
+            Description, 
+            Price, 
+            Quantity, 
+            IsAvailable,
+            CreatedAt,
+            DueDate
+        ) VALUES (
+            p_vendor_id,
+            p_category,
+            p_product_name,
+            p_description,
+            p_price,
+            p_quantity,
+            TRUE,
+            CURRENT_TIMESTAMP,
+            IFNULL(p_due_date, CURRENT_TIMESTAMP + INTERVAL 3 DAY)
+        );
+        
+        SELECT 'Product added successfully' AS message, LAST_INSERT_ID() AS ProductID;
+    -- END IF;
+END //
+
+DELIMITER ;
+
+-- Example usage:
+-- CALL add_product(1, 'Vegetable', 'Cucumber', 'Fresh organic cucumbers', 1.99, 10, NULL);
