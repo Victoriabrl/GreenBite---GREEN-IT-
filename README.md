@@ -36,6 +36,7 @@ node server.js
 - remove animations / shadows
 - globalize css
 - system fonts
-- pages for vendors
 - RBAC
 - change js var to let
+- about us page in header next to profile
+- vendors page (vif role=vendor) to see all offers and delete them
