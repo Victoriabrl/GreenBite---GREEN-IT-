@@ -15,7 +15,10 @@
           </li>
         </ul>
   
-        <ul @mouseover="active = true" @mouseleave="active = false" >
+        <ul @mouseover="active = true" @mouseleave="active = false">
+          <li>
+            <a href="#/aboutus"> About Us</a>
+          </li>
           <li>
             <div>
               Profile  

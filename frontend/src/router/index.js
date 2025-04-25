@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import ProductsModule from '@/components/ProductsModule'
 import VendorsModule from '@/components/VendorsModule'
 import ProfileModule from '@/components/ProfileModule.vue'
+import AboutUs from '@/components/AboutUs.vue'
 
 Vue.use(Router)
 
@@ -45,6 +46,13 @@ export default new Router({
       name: 'profile',
       component: ProfileModule,
       props: true
+    },
+
+    // About Page
+    {
+      path: '/aboutus',
+      name: 'aboutus',
+      component: AboutUs
     },
   ]
 })
