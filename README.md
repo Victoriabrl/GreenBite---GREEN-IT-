@@ -46,3 +46,4 @@ node server.js
 
 - see all your products as a vendor
 - see all your orders as a user
+- delete / update product

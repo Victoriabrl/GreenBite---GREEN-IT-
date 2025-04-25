@@ -85,14 +85,6 @@
           <p> you don't have an account? <a href="#/profile/register">Register</a></p>
         </div>
       </div>
-      <div>
-        <h1 class="component-h1">For testing purposes</h1>
-          ('John Doe', 'john.doe@example.com', SHA2(CONCAT(now(), 'password123'), 224), now(), 'USER'),</br>
-          ('Jane Smith', 'jane.smith@example.com', SHA2(CONCAT(now(), 'secretpass'), 224), now(), 'USER'),</br>
-          ('Emily Clark', 'emily.clark@example.com', SHA2(CONCAT(now(), 'mypassword'), 224), now(), 'USER'),</br>
-          ('Sarah Lee', 'sarah.lee@example.com', SHA2(CONCAT(now(), 'letmein'), 224), now(), 'USER'),</br>
-          ('Michael Brown', 'michael.brown@example.com', SHA2(CONCAT(now(), 'adminpass'), 224), now(), 'ADMIN')</br>
-      </div>
     </div>
 
     <div id="edit-error"></div>
