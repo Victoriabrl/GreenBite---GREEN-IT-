@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    {{ this.role }}
+    <!--{{ this.role }}-->
 
     <div v-if="action === 'myprofile'">
       <!-- If the user is not logged in -->
@@ -13,17 +13,16 @@
 
       <!-- If the user is logged in -->
       <div v-else="this.role !== 'GUEST'">
-        <h1 class="component-h1">Your Profile, {{currentUser.user_name}}</h1>
-        <hr>
-
         <div v-if="this.role === 'VENDOR'">
+          <h1 class="component-h1">Your Vendor Space</h1>
           <p>Add a new product</p>
           <a href="#/products/edit/0" class="btn secondary">Add Product</a>
           
           <hr>
         </div>
 
-        {{ currentUser }}
+        <h1 class="component-h1">Your Profile, {{currentUser.user_name}}</h1>
+        <!--{{ currentUser }}-->
         <div class="show-user">
             <table class="table table-striped table-bordered">
                 <tbody>

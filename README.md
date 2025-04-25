@@ -39,4 +39,5 @@ node server.js
 - RBAC
 - change js var to let
 - about us page in header next to profile
-- vendors page (vif role=vendor) to see all offers and delete them
+- see all your products as a vendor
+- see all your orders as a user
