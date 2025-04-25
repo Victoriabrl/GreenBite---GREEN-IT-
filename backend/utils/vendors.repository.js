@@ -29,6 +29,20 @@ module.exports = {
             console.log(err);
             throw err;
         }
+    },
+
+    async getVendorProductsByUserId(id) {
+        try {
+            let sql = "CALL get_vendor_products_by_user_id(?)";
+            const [rows, fields] = await pool.execute(sql, [id]);
+            console.log("Products FETCHED: " + rows[0].length + " for vendor id: " + id);
+            return rows[0];
+            
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
     }
+
 
 };

@@ -10,6 +10,7 @@ router.get('/categories/:Categories', productsCategoriesAction);
 router.get('/order/:userID/:productID/:paymentMethod', productsOrderAction);
 router.post('/add', auth.authorizeRequest("VENDOR"), productsAddAction);
 //router.post('/update/:ProductID', auth.authorizeRequest("VENDOR"), productsUpdateAction);
+router.get('/products/:userID', productsbyIDAction);
 
 
 async function productsListAction(request, response) {
@@ -59,6 +60,11 @@ async function productsAddAction(request, response) {
         console.error("Error adding product:", error);
         response.status(500).send("Internal Server Error");
     }
+}
+
+async function productsbyIDAction(request, response) {
+    let products = await productsRepo.getProductsByUserId(request.params.userID);
+    response.send(JSON.stringify(products));
 }
 
 

@@ -206,3 +206,71 @@ DELIMITER ;
 
 -- Example usage:
 -- CALL add_product(1, 'Vegetable', 'Cucumber', 'Fresh organic cucumbers', 1.99, 10, NULL);
+
+
+
+
+
+
+-- PROCEDURE to get all products ordered by a specific user
+DROP PROCEDURE IF EXISTS get_user_orders;
+DELIMITER //
+
+CREATE PROCEDURE get_user_orders(IN p_user_id INT)
+BEGIN
+    SELECT 
+        o.OrderID,
+        p.ProductID,
+        p.ProductName,
+        p.Description,
+        p.DueDate,
+        p.Price,
+        v.BusinessName AS Vendor,
+        o.OrderDate,
+        o.PaymentMethod
+    FROM 
+        Orders o
+    JOIN 
+        Products p ON o.ProductID = p.ProductID
+    JOIN 
+        Vendors v ON p.VendorID = v.VendorID
+    WHERE 
+        o.user_id = p_user_id
+    ORDER BY 
+        o.OrderDate DESC;
+END //
+
+DELIMITER ;
+
+-- PROCEDURE to get all products currently being sold by a vendor
+-- PROCEDURE to get all products currently being sold by a vendor based on user_id
+DROP PROCEDURE IF EXISTS get_vendor_products_by_user_id;
+DELIMITER //
+
+CREATE PROCEDURE get_vendor_products_by_user_id(IN p_user_id INT)
+BEGIN
+    SELECT 
+        p.ProductID,
+        p.Category,
+        p.ProductName,
+        p.Description,
+        p.Price,
+        p.Quantity,
+        p.IsAvailable,
+        p.CreatedAt,
+        p.DueDate,
+        v.BusinessName
+    FROM 
+        Products p
+    JOIN 
+        Vendors v ON p.VendorID = v.VendorID
+    WHERE 
+        v.user_id = p_user_id
+    ORDER BY 
+        p.DueDate DESC;
+END //
+
+DELIMITER ;
+
+-- Example usage:
+-- CALL get_vendor_products_by_user_id(1);

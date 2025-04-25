@@ -13,11 +13,63 @@
 
       <!-- If the user is logged in -->
       <div v-else="this.role !== 'GUEST'">
+
+        <div>
+          <h1 class="component-h1">Your User Space</h1>
+          <p>Display the products you are currently buying</p>
+          <button @click="getProductsData()" class="btn primary">See Products</button>
+
+          <div v-if="this.prodtuctsBoughtArray.length > 0">
+            <h1 class="component-h1">Your Bought Products</h1>
+            <div class="products-section">
+              <div class="products-grid">
+                <div v-for="product of prodtuctsBoughtArray" 
+                    v-bind:key="product.ProductID" 
+                    class="product-card">
+                  <a :href="'/#/products/show/' + product.ProductID" class="product-link">
+                    <div class="product-name">{{ product.ProductName }}</div>
+                    <div class="product-details">
+                      <span class="product-price">{{ product.Price }}€</span>
+                      <span class="product-quantity">{{ product.Quantity }} kg</span>
+                    </div>
+                    <div class="product-date">Good before: {{ product.DueDate }}</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <br><br>
+          </div>
+
+          <hr>
+        </div>
+
         <div v-if="this.role === 'VENDOR'">
           <h1 class="component-h1">Your Vendor Space</h1>
-          <p>Add a new product</p>
+          <p>Display the products you are currently selling // Add a new product</p>
+          <button @click="getProductsData()" class="btn primary">See Products</button>
           <a href="#/products/edit/0" class="btn secondary">Add Product</a>
-          
+
+          <div v-if="this.prodtuctsSellingArray.length > 0">
+            <h1 class="component-h1">Products you are selling</h1>
+            <div class="products-section">
+              <div class="products-grid">
+                <div v-for="product of prodtuctsSellingArray" 
+                    v-bind:key="product.ProductID" 
+                    class="product-card">
+                  <a :href="'/#/products/show/' + product.ProductID" class="product-link">
+                    <div class="product-name">{{ product.ProductName }}</div>
+                    <div class="product-details">
+                      <span class="product-price">{{ product.Price }}€</span>
+                      <span class="product-quantity">{{ product.Quantity }} kg</span>
+                    </div>
+                    <div class="product-date">Good before: {{ product.DueDate }}</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <br><br>
+          </div>
+
           <hr>
         </div>
 
@@ -100,7 +152,8 @@
     data() {
         return {
             role: '',
-            bookArray: [],
+            prodtuctsSellingArray: [],
+            prodtuctsBoughtArray: [],
             currentUser: {
                 user_id: 0,
                 user_name: '',
@@ -135,9 +188,6 @@
           if (this.role && this.role !== 'GUEST') {
             let response = await this.$http.get("http://localhost:9000/api/auth/"+this.role.toLowerCase());
             this.currentUser = response.data;
-            // Uncomment and fix this if you want to load borrowed books
-            // response = await this.$http.get("http://localhost:9000/api/borrow/userbooks/"+this.currentUser.user_id);
-            // this.bookArray = response.data;
           }
         } catch (error) {
           console.log(error);
@@ -201,6 +251,20 @@
           document.getElementById("edit-error").appendChild(errorDiv);
         }
       },
+
+      async getProductsData() {
+        try {
+          if (this.role === 'VENDOR') {
+            let response = await this.$http.get("http://localhost:9000/api/vendors/products/"+this.currentUser.user_id);
+            this.prodtuctsSellingArray = response.data;
+          }
+          let response = await this.$http.get("http://localhost:9000/api/products/products/"+this.currentUser.user_id);
+          this.prodtuctsBoughtArray = response.data;
+
+        } catch (error) {
+            console.log(error);
+        }
+      }
     },
 
     watch: {
@@ -239,9 +303,8 @@
       width: 100%;
   }
 
-  input[type="button"], button {
-    padding: 10px;
-    margin-bottom: 20px;
+  .btn {
+    margin-bottom: 10px;
   }
 
   .form {
@@ -254,33 +317,67 @@
     margin: auto auto 20px;
   }
 
-  /************ BOOK LIST ************/
-  .book-list {
-    margin: auto; /* Center the ul element */
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    max-width: 1500px;
-    list-style-type: none; /* Remove dots */
-  }
 
-  .book-list li {
-    margin: 0 20px 20px;
-    text-align: center;
-    position: relative;
-    max-width: 200px;
-  }
 
-  .book-list a {
-    color: #000000;
-    text-decoration: none;
-  }
+.products-section {
+  width: 90%;  /* Adjust this value based on your preference */
+  max-width: 1200px;  /* Prevents the grid from becoming too wide on large screens */
+  margin: 0 auto;  /* This centers the container horizontally */
+  padding: 20px 0;  /* Add some vertical padding */
+}
 
-  .book-list a:hover {
-    text-decoration: underline;
-  }
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+
+.product-card {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+}
+
+.product-link {
+  display: block;
+  padding: 20px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-link:hover {
+  text-decoration: none;
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.product-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.product-price {
+  font-weight: 700;
+  color: #27ae60;
+}
+
+.product-quantity {
+  color: #7f8c8d;
+}
+
+.product-date {
+  font-size: 0.9rem;
+  color: #95a5a6;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
 </style>

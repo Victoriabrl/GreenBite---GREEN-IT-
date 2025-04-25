@@ -79,5 +79,18 @@ module.exports = {
         const [okPacket, fields] = await pool.execute(sql, [p_vendor_id, p_category, p_product_name, p_description, p_price, p_quantity, p_due_date]);
         console.log("Product ADDED: " + JSON.stringify(okPacket));//rows[0].length + " for vendor: " + VendorID);
         return okPacket.insertId;
+    },
+
+    async getProductsByUserId(id) {
+        try {
+            let sql = "CALL get_user_orders(?)";
+            const [rows, fields] = await pool.execute(sql, [id]);
+            console.log("Products FETCHED: " + rows[0].length + " for user id: " + id);
+            return rows[0];
+            
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
     }
 };
