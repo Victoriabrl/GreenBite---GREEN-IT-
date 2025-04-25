@@ -172,7 +172,7 @@
 
       async getUserRole() {
         try {
-          let response = await this.$http.get("http://localhost:9000/api/auth/role");
+          let response = await this.$http.get(`${this.$apiBaseUrl}/auth/role`);
           this.role = response.data;
           // Call refreshCurrentUser after role is updated
           if (this.role !== 'GUEST') {
@@ -186,7 +186,7 @@
       async refreshCurrentUser() {
         try {
           if (this.role && this.role !== 'GUEST') {
-            let response = await this.$http.get("http://localhost:9000/api/auth/"+this.role.toLowerCase());
+            let response = await this.$http.get(`${this.$apiBaseUrl}/auth/`+this.role.toLowerCase());
             this.currentUser = response.data;
           }
         } catch (error) {
@@ -199,9 +199,9 @@
         try {
           let response = null;
           if (method === "post") 
-            response = await this.$http.post("http://localhost:9000/api/auth/"+endpoint, params);
+            response = await this.$http.post(`${this.$apiBaseUrl}/auth/`+endpoint, params);
           else
-            response = await this.$http.get("http://localhost:9000/api/auth/"+endpoint);
+            response = await this.$http.get(`${this.$apiBaseUrl}/auth/`+endpoint);
           
           this.role = response.data.userRole;
           if (response.data.loginResult) {
@@ -229,9 +229,9 @@
         try {
           let response = null;
           if (method === "post") 
-            response = await this.$http.post("http://localhost:9000/api/auth/"+endpoint, params);
+            response = await this.$http.post(`${this.$apiBaseUrl}/auth/`+endpoint, params);
           else
-            response = await this.$http.get("http://localhost:9000/api/auth/"+endpoint);
+            response = await this.$http.get(`${this.$apiBaseUrl}/auth/`+endpoint);
           
           this.role = response.data.userRole;
           if (response.data.loginResult) {
@@ -255,10 +255,10 @@
       async getProductsData() {
         try {
           if (this.role === 'VENDOR') {
-            let response = await this.$http.get("http://localhost:9000/api/vendors/products/"+this.currentUser.user_id);
+            let response = await this.$http.get(`${this.$apiBaseUrl}/vendors/products/`+this.currentUser.user_id);
             this.prodtuctsSellingArray = response.data;
           }
-          let response = await this.$http.get("http://localhost:9000/api/products/products/"+this.currentUser.user_id);
+          let response = await this.$http.get(`${this.$apiBaseUrl}/products/products/`+this.currentUser.user_id);
           this.prodtuctsBoughtArray = response.data;
 
         } catch (error) {

@@ -67,7 +67,7 @@ export default {
         methods: {
                 async getAllData(pageNumber, pageSize) {
                         try {
-                                let responseVendor = await this.$http.get('http://localhost:9000/api/vendors/list');
+                                let responseVendor = await this.$http.get(`${this.$apiBaseUrl}/vendors/list`);
                                 this.vendorArray = await responseVendor.data;
                         } catch (exception) {
                                 console.log(exception);
@@ -80,7 +80,7 @@ export default {
                                 return;
                         }
                         try {
-                                let responseVendor = await this.$http.get("http://localhost:9000/api/vendors/show/" + this.$props.id);
+                                let responseVendor = await this.$http.get(`${this.$apiBaseUrl}/vendors/show/` + this.$props.id);
                                 this.currentVendor = responseVendor.data;
                         } catch (ex) {
                                 console.log(ex);

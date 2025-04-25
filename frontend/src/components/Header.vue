@@ -59,7 +59,7 @@
         try {
           this.$router.push('/profile/login');
           let response = null;
-          response = await this.$http.get("http://localhost:9000/api/auth/"+endpoint);
+          response = await this.$http.get(`${this.$apiBaseUrl}/auth/`+endpoint);
           this.msg = JSON.stringify(response.data);
           this.getUserRole();
         } catch (error) {

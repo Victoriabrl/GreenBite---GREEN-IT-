@@ -184,7 +184,7 @@
   
       async getAllData(pageNumber, pageSize) {
         try {
-          let responseProduct = await this.$http.get('http://localhost:9000/api/products/list');
+          let responseProduct = await this.$http.get(`${this.$apiBaseUrl}/products/list`);
           this.productArray = await responseProduct.data;
   
         } catch (exception) {
@@ -196,7 +196,7 @@
         try {
           // concatenate the filterArray into a string with commas
           let filterString = this.filterArray.join(',');
-          let responseProduct = await this.$http.get('http://localhost:9000/api/products/categories/' + filterString);
+          let responseProduct = await this.$http.get(`${this.$apiBaseUrl}/products/categories/` + filterString);
           this.productArray = await responseProduct.data;
   
         } catch (exception) {
@@ -213,7 +213,7 @@
           return;
         }
         try {
-          let responseProduct = await this.$http.get("http://localhost:9000/api/products/show/" + this.$props.id);
+          let responseProduct = await this.$http.get(`${this.$apiBaseUrl}/products/show/` + this.$props.id);
           this.currentProduct = responseProduct.data;
   
         } catch (ex) {
@@ -224,7 +224,7 @@
       async orderProduct(productID, paymentMethod) {
         let userID = null;
         try {
-          let responseUser = await this.$http.get("http://localhost:9000/api/auth/id");
+          let responseUser = await this.$http.get(`${this.$apiBaseUrl}/auth/id`);
           userID = responseUser.data;
           if (userID === "Authentication required") {
             alert("You are not logged in!");
@@ -234,7 +234,7 @@
           console.log(ex);
         }
         try {
-          let responseProduct = await this.$http.get("http://localhost:9000/api/products/order/" + userID + "/" + this.$props.id + "/" + paymentMethod);
+          let responseProduct = await this.$http.get(`${this.$apiBaseUrl}/products/order/` + userID + "/" + this.$props.id + "/" + paymentMethod);
           alert("Product ordered successfully! You will receive an email for the payment.");
           this.$router.push('/products/list/all');
   
@@ -247,7 +247,7 @@
         try {
           if (this.$props.id === "all" || this.$props.id === "0") {
             // add new product
-            let responseProduct = await this.$http.post("http://localhost:9000/api/products/add",
+            let responseProduct = await this.$http.post(`${this.$apiBaseUrl}/products/add`,
               {
                 ProductName: this.currentProduct.ProductName,
                 Category: this.currentProduct.Category,
