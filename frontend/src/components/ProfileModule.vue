@@ -12,9 +12,18 @@
       </div>
 
       <!-- If the user is logged in -->
-      <div v-if="this.role !== 'GUEST'">
-        {{ currentUser }}
+      <div v-else="this.role !== 'GUEST'">
         <h1 class="component-h1">Your Profile, {{currentUser.user_name}}</h1>
+        <hr>
+
+        <div v-if="this.role === 'VENDOR'">
+          <p>Add a new product</p>
+          <a href="#/products/edit/0" class="btn secondary">Add Product</a>
+          
+          <hr>
+        </div>
+
+        {{ currentUser }}
         <div class="show-user">
             <table class="table table-striped table-bordered">
                 <tbody>
@@ -38,56 +47,6 @@
             </table>
         </div>
         <br><br>
-        <hr>
-        
-        <!-- Book list -->
-        <div>
-          <h1 class="component-h1">Your borrows</h1>
-          <ul class="book-list">
-            <li v-for="book of bookArray" v-bind:key="book.book_id" class="zoom-hover">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th colspan="3">
-                      <a :href="'/#/books/show/' + book.book_id">
-                        {{ book.book_name }}<br/>
-                        <i><small>{{ book.book_author }}</small></i>
-                      </a>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th colspan="3">
-                      <a :href="'/#/books/show/' + book.book_id">
-                        <img v-bind:src="'../../static/book-covers/'+book.book_imageFileName" alt="" width="150" height="230">
-                      </a>
-                    </th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr>
-                    <td>
-                      <b>Borrow status:</b><br/>
-                      {{ book.borrow_status }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Due date:</b><br/>
-                      {{book.borrow_returnDate}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <b>Fine:</b> {{book.borrow_fine}}$
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </li>
-          </ul>
-        </div>
-
       </div>
     </div>
 
@@ -101,7 +60,8 @@
           <br>
           <label for="email">Email:</label>
           <input type="email" class="form-control" id="email" name="email" v-model="currentUser.user_email">
-          <br>
+          <p><small><em>Careful, if you apply to be a vendor, this email will be public.</em></small></p>
+          <br/>
           <label for="password">Password:</label>
           <input type="password" class="form-control" id="password" name="password" v-model="currentUser.user_password">
           <br>

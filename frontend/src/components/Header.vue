@@ -18,9 +18,7 @@
         <ul @mouseover="active = true" @mouseleave="active = false" >
           <li>
             <div>
-              Profile
-              <!--<img src="../assets/logos/profile-logo.png" alt="" width="50">-->
-  
+              Profile  
               <ul v-if="active === true" class="profile-list">
                 <li>
                   <a href="#/profile/myprofile"> My Profile</a>
