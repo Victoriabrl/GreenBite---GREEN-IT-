@@ -4,7 +4,11 @@
   "description": "Mini-Hackathon Project: \"The greenest website\" <br/>\r Objective: design, implement and analyze the carbon footprint of a website. The goal is to create a website that is as environmentally friendly as possible, while minimizing its environmental impact.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd frontend && npm run dev",
+    "deploy:frontend": "cd frontend && npm run build"
+
   },
   "repository": {
     "type": "git",
