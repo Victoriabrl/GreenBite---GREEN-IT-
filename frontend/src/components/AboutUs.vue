@@ -21,21 +21,21 @@
                 </div>
                 <div class="team-member">
                     <h3>Hormone</h3>
-                    <p>Main Developer (fullstack)</p>
+                    <p>Main Developer (Fullstack)</p>
                     <a href="https://github.com/Hormone4" target="_blank" rel="noopener noreferrer">
                         GitHub Profile
                     </a>
                 </div>
                 <div class="team-member">
                     <h3>Eikko</h3>
-                    <p>Green IT Advocate</p>
+                    <p>UI/UX Designer and Green IT Advocate</p>
                     <a href="https://github.com/Eikk-o" target="_blank" rel="noopener noreferrer">
                         GitHub Profile
                     </a>
                 </div>
                 <div class="team-member">
                     <h3>Nastrau</h3>
-                    <p>Sustainability Expert</p>
+                    <p>Sustainability Expert and Performance Auditor</p>
                 </div>
             </div>
         </div>
