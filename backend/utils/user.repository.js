@@ -104,6 +104,9 @@ module.exports = {
     async areValidCredentials(username, password) {
         try {
           let sql = "SELECT * FROM users WHERE user_name = ? AND user_password COLLATE utf8mb4_general_ci = sha2(concat(user_created, ?), 224) COLLATE utf8mb4_general_ci "; 
+          // Might require the following:
+          //ALTER TABLE users MODIFY user_password VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          //ALTER TABLE users MODIFY user_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
           // TODO: better salt + pw hash (bcrypt, pbkdf2, argon2)
           // COLLATE usually not needed (mariaDb compatibility)
           const [rows, fields] = await pool.execute(sql, [username, password]); 
