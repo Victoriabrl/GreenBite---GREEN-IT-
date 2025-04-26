@@ -91,10 +91,6 @@ module.exports = {
 
     async deleteUser(user_id) {
         try {
-            // First delete related borrow records
-            let sql = "DELETE FROM borrow WHERE user_id = ?";
-            let [okPacket, fields] = await pool.execute(sql, [user_id]);
-            
             sql = "DELETE FROM users WHERE user_id = ?";    
             [okPacket, fields] = await pool.execute(sql, [user_id]);
             console.log("DELETE " + JSON.stringify(okPacket));
@@ -107,7 +103,7 @@ module.exports = {
 
     async areValidCredentials(username, password) {
         try {
-          let sql = "SELECT * FROM USERS WHERE user_name = ? AND user_password COLLATE utf8mb4_general_ci = sha2(concat(user_created, ?), 224) COLLATE utf8mb4_general_ci "; 
+          let sql = "SELECT * FROM users WHERE user_name = ? AND user_password COLLATE utf8mb4_general_ci = sha2(concat(user_created, ?), 224) COLLATE utf8mb4_general_ci "; 
           // TODO: better salt + pw hash (bcrypt, pbkdf2, argon2)
           // COLLATE usually not needed (mariaDb compatibility)
           const [rows, fields] = await pool.execute(sql, [username, password]); 
