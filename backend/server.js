@@ -28,13 +28,24 @@ app.use(bodyParser.json(), bodyParser.urlencoded({ extended: true }));
 // allow serverside session storage
 const session = require("express-session");
 app.use(session({
-    secret: "SecretRandomStringDskghadslkghdlkghdghaksdghdksh",   // session storage will be stored encrypted
+    secret: process.env.SESSION_SECRET || "oaziudh8241024812AAAAAAAPAPAP09",
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 }, // storing session identifier, maxAge is the time the cookie will be stored in the browser (1 day, in milliseconds)
+    cookie: { 
+      maxAge: 1000 * 60 * 60 * 24,
+      secure: process.env.NODE_ENV === 'production' // Use secure cookies in production
+    },
     resave: false
 }));
-// if (request.session.cart===undefined) request.session.cart = [];
-// request.session.cart.push("xxxx");
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : err.message
+  });
+});
+
 
 // enable Cross Origin Resource Sharing (needed for cross-origin API)
 const cors = require('cors');
