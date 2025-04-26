@@ -1,4 +1,24 @@
 USE GreenBite;
+-- USE sql7775541;
+
+
+-- Event to regularly clean up expired products
+DROP EVENT IF EXISTS delete_expired_products;
+DELIMITER //
+CREATE EVENT delete_expired_products
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+BEGIN
+    DELETE FROM Products WHERE DueDate < NOW();
+END //
+DELIMITER ;
+
+
+
+
+
+
 
 DROP PROCEDURE IF EXISTS get_all_vendors;
 DELIMITER //
@@ -128,8 +148,8 @@ BEGIN
     ELSE
         
         -- Insert order
-        INSERT INTO Orders (user_id, ProductID, PaymentMethod)
-        VALUES (p_user_id, p_product_id, p_payment_method);
+        INSERT INTO Orders (user_id, ProductID, OrderDate, PaymentMethod)
+        VALUES (p_user_id, p_product_id, NOW(), p_payment_method);
         
         -- Update product quantity
         UPDATE Products 
@@ -194,8 +214,8 @@ BEGIN
             p_price,
             p_quantity,
             TRUE,
-            CURRENT_TIMESTAMP,
-            IFNULL(p_due_date, CURRENT_TIMESTAMP + INTERVAL 3 DAY)
+            NOW(),
+            IFNULL(p_due_date, DATE_ADD(NOW(), INTERVAL 3 DAY))
         );
         
         SELECT 'Product added successfully' AS message, LAST_INSERT_ID() AS ProductID;
