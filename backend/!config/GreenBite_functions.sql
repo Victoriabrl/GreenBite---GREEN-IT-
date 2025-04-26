@@ -39,7 +39,7 @@ BEGIN
     SELECT BusinessName, BusinessDescription, BusinessAddress, Website, Rating, user_email
     FROM Vendors
     INNER JOIN Reviews USING (VendorID)
-    INNER JOIN Users ON Users.user_id = Vendors.user_id
+    INNER JOIN users ON users.user_id = Vendors.user_id
     WHERE VendorID = vendor_id;
 END //
 
