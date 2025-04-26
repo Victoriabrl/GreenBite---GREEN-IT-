@@ -53,7 +53,7 @@ DELIMITER //
 
 CREATE PROCEDURE get_products_sorted_by_due_date()
 BEGIN
-    SELECT * FROM products
+    SELECT * FROM Products
     ORDER BY DueDate DESC; 
 END //
 
@@ -68,7 +68,7 @@ DELIMITER //
 CREATE PROCEDURE get_product_by_id(IN product_id INT)
 BEGIN
     SELECT VendorID, Category, BusinessName, ProductName, Description, Price, Quantity, DueDate
-    FROM products INNER JOIN Vendors USING (VendorID)
+    FROM Products INNER JOIN Vendors USING (VendorID)
     WHERE ProductID = product_id;
 END //
 DELIMITER ;
