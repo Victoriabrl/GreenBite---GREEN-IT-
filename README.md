@@ -14,6 +14,7 @@ Brief description of the different parts of the site and the functionalities.
 - In the ```backend\!config``` folder
   - Run the 2 sql scripts ```GreenBite.sql``` to create the tables of the database & ```GreenBite_functions.sql``` to create the functions, procedures...
   - Copy the .env file to the root of the ```backend``` folder & update the ```DB_PASS=yourMySQLpassword``` field to your actual MySQL root user password
+- In the ```backend\server.js``` file, comment out origin: "https://green-bite-green-it.vercel.app", and put back origin: "http://localhost:8080",
 - Run ```npm install```
 
 

@@ -31,7 +31,12 @@ app.use(session({
 
 // enable Cross Origin Resource Sharing (needed for cross-origin API)
 const cors = require('cors');
-app.use(cors({ origin: "http://localhost:8080", credentials: true, methods: [ 'GET', 'POST' ] })); 
+app.use(cors({
+    //origin: "http://localhost:8080",
+    origin: "https://green-bite-green-it.vercel.app",
+    credentials: true,
+    methods: [ 'GET', 'POST' ]
+})); 
 
 
 // configure passport
