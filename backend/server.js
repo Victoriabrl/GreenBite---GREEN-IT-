@@ -7,9 +7,16 @@ const express = require('express');
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
-app.listen(process.env.WEB_PORT, '0.0.0.0',
-    function() { console.log("Listening on "+process.env.WEB_PORT); }
-);
+const PORT = process.env.PORT || process.env.WEB_PORT || 9000;
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
+
+// Export the Express app for Vercel
+module.exports = app;
+
 
 // *** MIDDLEWARES ***
 // app.use(callbackFunction1, callbackFunction2, callbackFunction3)
@@ -32,8 +39,10 @@ app.use(session({
 // enable Cross Origin Resource Sharing (needed for cross-origin API)
 const cors = require('cors');
 app.use(cors({
-    //origin: "http://localhost:8080",
-    origin: "https://green-bite-green-it.vercel.app",
+    origin: [
+        "http://localhost:8080", 
+        "https://green-bite-green-it.vercel.app"
+    ],
     credentials: true,
     methods: [ 'GET', 'POST' ]
 })); 
