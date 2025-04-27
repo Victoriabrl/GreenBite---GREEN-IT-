@@ -1,7 +1,7 @@
 # GreenBite
 
 
-**Website link**: <a href="https://green-bite-green-it.vercel.app">GreenBit</a><br/>
+**Website link**: <a href="https://green-bite-green-it.vercel.app">GreenBite</a><br/>
 **Mini-Hackathon Project**: "The greenest website" <br/>
 **Objective**: design, implement and analyze the carbon footprint of a website. The goal is to create a website that is as environmentally friendly as possible, while minimizing its environmental impact.
 
