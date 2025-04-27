@@ -14,14 +14,14 @@
             <div class="team-members">
                 <div class="team-member">
                     <h3>Victoria</h3>
-                    <p>Developer and Project Manager</p>
+                    <p>Project Manager and developper</p>
                     <a href="https://github.com/Victoriabrl" target="_blank" rel="noopener noreferrer">
                         GitHub Profile
                     </a>
                 </div>
                 <div class="team-member">
                     <h3>Hormone</h3>
-                    <p>Main Developer (Fullstack)</p>
+                    <p>Lead Developer (Fullstack) and structure engineer</p>
                     <a href="https://github.com/Hormone4" target="_blank" rel="noopener noreferrer">
                         GitHub Profile
                     </a>
@@ -107,12 +107,9 @@
         padding: 1.5rem;
         border-radius: 8px;
         background-color: rgba(232, 245, 233, 0.5);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-    }
-
-    .team-member:hover {
-        transform: translateY(-5px);
+        /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;*/
+        border: 1px solid #ddd;
     }
 
     .team-member h3 {
@@ -127,7 +124,7 @@
         text-decoration: none;
         border-bottom: 1px solid #2c8c3c;
         padding-bottom: 2px;
-        transition: color 0.3s ease;
+        /*transition: color 0.3s ease;*/
     }
 
     .team-member a:hover {
