@@ -381,6 +381,7 @@ a:hover {
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 6px;
+  border: 1px solid #eaeaea; /* Add border */
 }
 
 .meta-item {
@@ -407,7 +408,7 @@ a:hover {
 .payment-card {
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd; /* Replace box-shadow with border */
   padding: 25px;
 }
 
@@ -451,7 +452,7 @@ a:hover {
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #ddd; /* Replace box-shadow with border */
 }
 
 .filter-options {
@@ -467,7 +468,7 @@ a:hover {
   background-color: white;
   padding: 8px 15px;
   border-radius: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd; /* Replace box-shadow with border */
   cursor: pointer;
 }
 
@@ -488,14 +489,15 @@ a:hover {
 .product-card {
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd; /* Replace box-shadow with border */
   overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+  /* Removed: transition: transform 0.2s, box-shadow 0.2s; */
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  /* Removed: transform: translateY(-5px); */
+  /* Removed: box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); */
+  border: 1px solid #aaa; /* Darker border on hover instead of shadow */
 }
 
 .product-link {
@@ -517,9 +519,10 @@ a:hover {
 }
 
 .product-details {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd; /* Replace box-shadow with border */
+  overflow: hidden;
 }
 
 .product-price {
