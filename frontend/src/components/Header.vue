@@ -4,7 +4,7 @@
         <ul>
           <li>
             <a href="#/">
-              <h2> <img src="../assets/logos/logo.webp" alt=" " width="100"> <b>GreenBite</b> </h2>
+              <h2> <img src="../assets/logos/logo.webp" alt=" "> <b>GreenBite</b> </h2>
             </a>
           </li>
           <li>
