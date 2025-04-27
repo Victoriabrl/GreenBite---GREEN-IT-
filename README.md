@@ -6,9 +6,32 @@ Objective: design, implement and analyze the carbon footprint of a website. The 
 
 ## The project
 
-Brief description of the different parts of the site and the functionalities.
+GreenBite is an environmentally conscious website designed to demonstrate sustainable web development practices:
 
-## Configuration
+### Components
+
+- **Frontend**: A lightweight, optimized Vue application that minimizes resource usage while providing a responsive user experience
+- **Backend**: Node.js server with optimized API endpoints for efficient data processing
+- **Database**: MySQL database with properly structured tables and optimized queries
+
+### Key Features
+
+- **Eco-friendly Design**: Minimalist UI with optimized images and reduced JavaScript usage
+- **Performance Optimization**: Server-side rendering and efficient data loading strategies
+- **Green Hosting Analysis**: Documentation of hosting choices to minimize environmental impact
+- **Best Practices Showcase**: Implementation of sustainable web development techniques
+
+### Technical Implementation
+
+- Vue frontend with performance-optimized components
+- Express.js backend with efficient routing
+- MySQL database for structured data storage
+- Environmental metrics tracking and analysis tools
+
+
+## How to run (locally)
+
+### Configuration
 
 - Install [node.js](https://nodejs.org/fr/download) (if not done before)
 - In the ```backend\!config``` folder
@@ -16,8 +39,7 @@ Brief description of the different parts of the site and the functionalities.
   - Copy the .env file to the root of the ```backend``` folder & update the ```DB_PASS=yourMySQLpassword``` field to your actual MySQL root user password
 - Run ```npm install```
 
-
-## How to run
+### Run
 Frontend
 ```bash
 cd frontend
@@ -29,19 +51,3 @@ Backend
 cd backend
 node server.js
 ```
-
-
-
-## To Do
-
-### Optis
-
-- remove animations / shadows
-- globalize css
-- system fonts
-- change js var to let
-- vendors by page
-
-### missing
-
-- delete / update product
