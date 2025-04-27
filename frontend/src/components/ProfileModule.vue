@@ -116,7 +116,7 @@
           <label for="password">Password:</label>
           <input type="password" class="form-control" id="password" name="password" v-model="currentUser.user_password">
           <br>
-          <button type="submit" @click="sendEditRequest()" class="btn primary">Submit</button>
+          <button type="submit" @click="sendAddRequest()" class="btn primary">Submit</button>
           <p> you already have an account? <a href="#/profile/login">Login</a></p>
         </div>
       </div>
@@ -249,6 +249,27 @@
           errorDiv.innerHTML = "Wrong username or password";
           errorDiv.style.color = "red";
           document.getElementById("edit-error").appendChild(errorDiv);
+        }
+      },
+
+      async sendAddRequest() {
+        try {
+            let response = await this.$http.post("http://localhost:9000/api/users/add" , {
+                user_name: this.currentUser.user_name,
+                user_email: this.currentUser.user_email,
+                user_password: this.currentUser.user_password
+            });
+
+            let errorDiv = document.createElement("div");
+            errorDiv.innerHTML = "Profile successfully created. You can now login";
+            errorDiv.style.color = "red";
+            document.getElementById("edit-error").appendChild(errorDiv);
+        } catch (error) {
+            console.log(error);
+            let errorDiv = document.createElement("div");
+            errorDiv.innerHTML = "Someone with that username/email already exists";
+            errorDiv.style.color = "red";
+            document.getElementById("edit-error").appendChild(errorDiv);
         }
       },
 
