@@ -154,10 +154,10 @@ a:hover {
 
 /* Vendor Details Page */
 .vendor-details {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #ddd; /* Replace box-shadow with border */
+  overflow: hidden;
 }
 
 .vendor-header {
@@ -249,17 +249,18 @@ a:hover {
 }
 
 .vendor-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    height: 180px;
-    transition: transform 0.2s, box-shadow 0.2s;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #ddd; /* Replace box-shadow with border */
+  overflow: hidden;
+  height: 180px;
+  /* Removed: transition: transform 0.2s, box-shadow 0.2s; */
 }
 
 .vendor-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  /* Removed: transform: translateY(-5px); */
+  /* Removed: box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); */
+  border: 1px solid #aaa; /* Darker border on hover instead of shadow */
 }
 
 .vendor-link {
