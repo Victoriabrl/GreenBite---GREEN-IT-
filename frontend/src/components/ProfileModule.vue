@@ -254,7 +254,7 @@
 
       async sendAddRequest() {
         try {
-            let response = await this.$http.post("http://localhost:9000/api/users/add" , {
+            let response = await this.$http.post(`${this.$apiBaseUrl}/users/add` , {
                 user_name: this.currentUser.user_name,
                 user_email: this.currentUser.user_email,
                 user_password: this.currentUser.user_password
